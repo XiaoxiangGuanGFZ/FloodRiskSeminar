@@ -1,0 +1,14 @@
+name: FloodRisk
+title: FloodRisk
+username:
+account: guanxiaoxiang-gfz
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6139872
+bundleId: 5850795
+url: https://guanxiaoxiang-gfz.shinyapps.io/FloodRisk/
+when: 1651233984.9819
+lastSyncTime: 1651233984.9819
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: introduction.docx|Readme.md|User manual.docx
