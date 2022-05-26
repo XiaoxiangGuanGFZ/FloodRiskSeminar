@@ -21,9 +21,13 @@ library()  # shows you what packages you’ve saved in your library
 search() # which packages are loaded and ready to use
 
 install.packages('ggplot2') # install packages(s) into R environment
+install.packages("extRemes")
+
 library('ggplot2') # Load a package into this working environment
 
 help(package="ggplot2") 
+help(package="extRemes") 
+
 # provides a brief description of the package and an
 # index of the functions and datasets included
 
@@ -48,11 +52,10 @@ c <- c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE) # Boolean or logical
 c(1,2,4,5,8,7,4,10) -> d  # -> assignment sign, not suggested
 
 e <- 1.25  # a scalar is one-element vector
-
 f <- 1:20
 g <- seq(from = 1, to = 20, by = 1)
 
-# ---- Matrice ----
+# ---- Matrices ----
 # A matrix is a two-dimensional array 
 # in which each element has the same mode (numeric, character, or logical)
 
@@ -86,6 +89,22 @@ diabetes <- c("Type1", "Type2", "Type1", "Type1")
 status <- c("Poor", "Improved", "Excellent", "Poor")
 patientdata <- data.frame(patientID, age, diabetes, status)
 patientdata
+patientdata$age
+patientdata$diabetes
+
+dim(patientdata)
+dim(df)
+
+colnames(patientdata)
+colnames(df)
+
+row.names(patientdata)
+row.names(df)
+
+iris
+str(iris)
+colnames(iris)
+dim(iris)
 
 # ---- list ----
 # a list is an ordered collection of objects (components)
@@ -95,6 +114,32 @@ list_example <- list(
   'l3' = data.frame('c1' = c(1,3,5), 'c2' = c(2,4,6)),
   'l4' = list(0)
 )
+
+# --- data type and mode conversion ----
+x = 10.1
+is.numeric(x)
+is.integer(x)
+is.character(x)
+is.logical(x)
+is.double(x)
+is.vector(x)
+is.matrix(x)
+is.data.frame(x)
+
+as.character(10)
+as.numeric(c('10', '1.52', '4.6'))
+as.numeric(c('xs', 'c0', ''))
+as.integer(10.54)
+as.logical(c(1, 0, 4, -1, 1.2, 0))
+
+x1 <- c(1,2,3)
+x2 <- c('a', 'b', 'c')
+x1 + x2
+
+c(x1, x2) # c(as.character(x1), x2)
+as.numeric(c(TRUE, TRUE, FALSE))
+sum(c(TRUE, TRUE, FALSE))
+x1 + c(TRUE, TRUE, FALSE)
 
 # --- data input and output ----
 # ---- from keyboard ----
@@ -254,57 +299,6 @@ myfunc <- function(x1,x2) {
 
 ### Data management ----
 
-# --- variable creation, naming
-x <- NULL
-
-x <- runif(10)
-names(x) <- paste('index', seq(1,10,1), sep = '')
-names(x)
-
-x['index2']
-x[c('index2', 'index6')]
-
-colnames(df)
-colnames(df) <- c('y', 'm', 'd', 'P', 'Ep', 'Q')
-fix(df)
-
-# --- missing value ----
-# NA : not available
-x <- c(1, 2, NA, 3, 4, 5, 6, -99.9)
-is.na(x)
-x[8] <- NA
-
-sum(x)
-mean(x)
-
-sum(x, na.rm = TRUE)
-mean(x, na.rm = TRUE)
-
-1 / 0
-log(-10)  # NaN: not a number
-
-is.infinite( 1 / 0)
-is.nan( log(-10) )
-
-na.omit(x)
-
-# --- type conversion ----
-x = 10.1
-is.numeric(x)
-is.integer(x)
-is.character(x)
-is.logical(x)
-is.double(x)
-is.vector(x)
-is.matrix(x)
-is.data.frame(x)
-
-as.character(10)
-as.numeric(c('10', '1.52', '4.6'))
-as.numeric(c('xs', 'c0', ''))
-as.integer(10.54)
-as.logical(c(1, 0, 4, -1, 1.2, 0))
-
 # --- control show ----
 
 # Logical operators
@@ -331,7 +325,7 @@ x1 > x2 | x3 <= x4  # |: or
 x1 <= x2 | x3 <= x4
 
 x1 <= x2
-!(x1 <= x2)  # !: not 
+!(x1 <= x2)  # !: exclamation mark: not 
 # ---- conditional execution ----
 if (x1 >= x2) {
   y = x1 - x2
@@ -352,6 +346,68 @@ Ids <- c(1,2,3,4,5)
 for (id in Ids) {
   print(id)
 }
+
+# --- variable creation, naming ----
+# creating numeric vectors
+x <- NULL
+x <- 0
+x <- c(1,2,3,4,5,6)
+x <- runif(10)
+x[1]
+x[2] <- 0
+x[11] <- 11
+x[13] <- 13
+c(x, c(1.2,2.3,5.4,0.3) )
+# creating logical vectors
+x <- c(TRUE, FALSE, FALSE)
+c(x, TRUE)
+x[4] <- TRUE
+c(x, c(TRUE, FALSE))
+
+x1 <- runif(10, min = 0 ,max = 1)
+x1 < 0.5
+x1 > 0.5
+
+# creating character vectors
+x <- c('a', 'b', 'c')
+as.character(c(1,2,3))
+
+x[4]<- 'd'
+c(x, 'e', 'd')
+paste0('s', 'd')
+
+years = 1999:2020
+paste0('Y', years)
+
+# creating data frame (from multiple vectors)
+# import from text files
+# create by keyboard
+
+colnames(df)
+colnames(df) <- c('y', 'm', 'd', 'P', 'Ep', 'Q')
+fix(df)
+
+
+# --- missing value ----
+# NA : not available
+x <- c(1, 2, NA, 3, 4, 5, 6, -99.9)
+is.na(x)
+x[8] <- NA
+
+sum(x)
+mean(x)
+
+sum(x, na.rm = TRUE)
+mean(x, na.rm = TRUE)
+
+1 / 0
+log(-10)  # NaN: not a number
+
+is.infinite( 1 / 0)
+is.nan( log(-10) )
+
+na.omit(x)
+
 
 # ---- filtering and sub-setting ----
 
@@ -420,7 +476,7 @@ df$ratio_P_Ep <- df$rainfall / df$evaporation
 df$ratio_P_Q <- df$rainfall / df$discharge
 
 df[, -7]
-df[,  !(colnames(df) %in% c('new_column'))]
+df[, !(colnames(df) %in% c('new_column'))]
 
 # ---- merging data ----
 df1 <- data.frame(
@@ -453,38 +509,72 @@ aggregate(rainfall ~ month + year, data = df, FUN = rainydays)
 ### graph drawing ----
 # --- basic graphs ---
 
-# bar plot
-barplot(df$rainfall)
-barplot(df$discharge)
-x = table(iris$Species, iris$Sepal.Length)
-barplot(x)
-
 # histogram
-hist(df$rainfall, breaks = seq(0,max(df$rainfall)+1,by = 1))
-hist(df$discharge, breaks = seq(min(df$discharge), max(df$discharge) + 100, 100))
+hist(iris$Sepal.Length )
+hist(iris$Sepal.Width )
+
+hist(iris$Sepal.Length,
+     xlab = 'Sepal length', 
+     ylab = 'Frequency', 
+     main = 'Histogram of Sepal length')
+
 
 # boxplot
-boxplot(df$evaporation)
-boxplot(df$discharge)
-boxplot(df$rainfall)
+boxplot(iris$Sepal.Width)
+boxplot(iris$Sepal.Length)
+boxplot(iris$Sepal.Length,
+        col = 'red',
+        lty = 3,
+        ylab = 'Sepal length')
 
 # general plot function
-plot(df$rainfall)
-plot(df$discharge, type = 'l')
-
-# scatter plot / dot plot
-plot(df$rainfall, df$discharge)
 ?plot
-plot(df$rainfall, df$ratio_P_Ep,
-     type = 'o',
-     xlab = '',
-     ylab = '',
-     main = '',
-     xlim = c(),
-     ylim = c()
-     )
-points(df$rainfall, df$ratio_P_Q, col = 'red')
+# scatter plot
+plot(iris$Sepal.Length)
+plot(iris$Sepal.Length, cex = 2)
 
+plot(iris$Sepal.Length, type = 'p')
+plot(iris$Sepal.Length, type = 'p', col = 'red')
+plot(iris$Sepal.Length, iris$Sepal.Width,
+     type = 'p', 
+     pch = 1,
+     col = 'red',
+     xlab = 'Sepal Length',
+     ylab = 'Sepal width')
+
+plot(iris$Sepal.Length, iris$Petal.Length,
+     type = 'p', col = 'red',
+     xlab = 'Sepal Length',
+     ylab = '')
+
+points(iris$Sepal.Length, iris$Petal.Width,
+       type = 'p', col = 'blue')
+
+legend(x = 4.5, y = 6, c('Petal length', 'Petal width'),
+       col = c('red', 'blue'),
+       pch = c(1,1), title = 'legend')
+
+# line plot
+
+x <- seq(-3, 3, 0.01)
+y <- dnorm(x, mean = 0, sd = 1)
+y2 <- dnorm(x, mean = 1, sd = 1)
+plot(x, y, type = 'l')
+plot(x, y2, type = 'l')
+
+plot(x, y, type = 'l', 
+     lty = 1,
+     col = 'red',
+     ylab = 'PDF')
+points(x,y2, type ='l',
+       lty = 2,
+       col = 'blue')
+legend(x = -2.5, y = 0.3,
+       c('mean=0, sd=1', 'mean=1, sd=1'),
+       col = c('red', 'blue'),
+       lty = c(1,2),
+       title = 'parameters'
+       )
 ### Exercises ----
 
 # import data into R environment from text file
