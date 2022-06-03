@@ -586,7 +586,7 @@ ui <- navbarPage(
                    )
                  ),
                  tabPanel(
-                   'Bloack maxima',
+                   'Block maxima',
                    br(),
                    p('The block maxima (BM) approach in extreme value analysis 
                      fits a sample of block maxima to the 
