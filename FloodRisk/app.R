@@ -769,12 +769,12 @@ ui <- navbarPage(
                      column(
                        2,
                        numericInput('GM_para_mu', 'Location \\(\\mu\\)',
-                                    min = 0, value = 5500, step = 500),
+                                    min = 0, value = 5500, step = 10),
                        numericInput('GM_para_sigma', 'Scale \\(\\sigma\\)',
-                                    min = 1, value = 2000, step = 100
+                                    min = 1, value = 2000, step = 10
                                     ),
                        numericInput('GM_para_xi', 'Shape \\(\\xi\\)', 
-                                    value = -0.2, step=0.1)
+                                    value = -0.2, step=0.01)
                      ),
                      column(
                        10,
