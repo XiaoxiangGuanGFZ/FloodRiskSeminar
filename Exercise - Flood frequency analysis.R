@@ -14,12 +14,6 @@
 # 5. display the data
 # 6. presentation
 
-# first create project folder and save there the data file in subfolder "Data"
-# then File --> New Project --> Existing directory
-wd <- getwd()
-# getwd() should give now the project directory
-wd <- 'D:/FloodRiskSeminar/FloodRisk/data/'
-setwd(wd)
 
 # install packages required in this project
 install.packages("extRemes")  # package for extreme value statistics
