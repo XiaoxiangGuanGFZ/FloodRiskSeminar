@@ -36,6 +36,8 @@ head(AMS)  # check the results
 
 ################################~Data preparation~##################################
 
+############################ Exploratory data analysis ############################
+
 colnames(AMS) <- c('year', 'Qmax')
 AMS$m_rank = rank(AMS$Qmax) # rank of the values
 AMS$P = round(AMS$m_rank / (1 + dim(AMS)[1]), 4) # empirical probability
