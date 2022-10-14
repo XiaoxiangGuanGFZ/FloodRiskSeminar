@@ -148,9 +148,8 @@ data_example <- c() # data.frame
 
 # import data as a data frame from a text file
 df <- read.table(
-  file = 'D:/FloodRiskSeminar/FloodRisk/data/Chitan-data-PEQ.csv', # filepath + file name
-  header = TRUE,
-  sep = ','
+  file = 'D:/FloodRiskSeminar/data/EXAMPLE_Chitan_Q_daily.txt', # filepath + file name
+  header = TRUE
 )
 head(df, 6)
 tail(df, 6)

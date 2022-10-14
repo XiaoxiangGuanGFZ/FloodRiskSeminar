@@ -18,7 +18,7 @@
 # then File --> New Project --> Existing directory
 
 # getwd() should give now the project directory
-wd <- 'D:/FloodRiskSeminar/FloodRisk/data/'
+wd <- 'D:/FloodRiskSeminar/data/'
 setwd(wd)
 
 # install packages required in this project
