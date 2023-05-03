@@ -1584,8 +1584,15 @@ server <- function(input, output) {
   output$Dataset_chart <- renderPlot({
     req(input$Dataset)
     df = Dataset()
-    df$date = as.Date(df$date, format = "%Y-%m-%d")
-    plot(df$date, df$value, type = "l", xlab='date', ylab='RV')
+    if (input$Sequencetype == "daily") {
+      
+      df$date = as.Date(df$date, format = "%Y-%m-%d")
+      plot(df$date, df$value, type = "l", xlab='date', ylab='RV')
+    } else {
+      # yearly data
+      plot(df$date, df$value, type = "l", xlab='year', ylab='RV')
+    }
+    
   })
   output$Dataset_bar <- renderPlot({
     req(input$Dataset)
@@ -1600,21 +1607,32 @@ server <- function(input, output) {
     if (input$datasource == 'import') {
       req(input$Dataset)
       df = Dataset()
-      df$date = as.Date(df$date, format = "%Y-%m-%d")
-      df$year = as.numeric(strftime(df$date, format = "%Y"))
-      years = unique(df$year)
-      n = length(years)
-      ams_value = ams_date = NULL
-      for (i in 1:n) {
-        df1 = df %>% filter(year == years[i])
-        ams_value[i] = max(df1$value)
-        ams_date[i] = as.character(strftime(df1$date[which.max(df1$value)], format = "%Y-%m-%d"))
+      if (input$Sequencetype == "daily") {
+        # daily data
+        df$date = as.Date(df$date, format = "%Y-%m-%d")
+        df$year = as.numeric(strftime(df$date, format = "%Y"))
+        years = unique(df$year)
+        n = length(years)
+        ams_value = ams_date = NULL
+        for (i in 1:n) {
+          df1 = df %>% filter(year == years[i])
+          ams_value[i] = max(df1$value)
+          ams_date[i] = as.character(strftime(df1$date[which.max(df1$value)], format = "%Y-%m-%d"))
+        }
+        data.frame(
+          'date' = ams_date, 
+          'year' = years,
+          'value' =  ams_value
+        )
+      } else {
+        # yearly data
+        data.frame(
+          'date' = df[, 1], 
+          'year' = df[, 1],
+          'value' =  df[, 2]
+        )
       }
-      data.frame(
-        'date' = ams_date, 
-        'year' = years,
-        'value' =  ams_value
-      )
+      
     } else {
       AMS_builtin
     }
@@ -1623,12 +1641,18 @@ server <- function(input, output) {
   # ----block maxima -----
   output$plot_Maxima_daily <- renderPlot({
     req(input$Dataset)
-    df = Dataset()
     ams = AMS()
-    df$date = as.Date(df$date, format = "%Y-%m-%d")
-    ams$date = as.Date(ams$date, format = "%Y-%m-%d")
-    plot(df$date, df$value, type = "l", xlab='date', ylab='RV')
-    points(ams$date, ams$value, type = 'p', col = 'red')
+    if (input$Sequencetype == "daily") {
+      df = Dataset()
+      df$date = as.Date(df$date, format = "%Y-%m-%d")
+      ams$date = as.Date(ams$date, format = "%Y-%m-%d")
+      plot(df$date, df$value, type = "l", xlab='date', ylab='RV')
+      points(ams$date, ams$value, type = 'p', col = 'red')
+    } else {
+      # original data: yearly
+      plot(ams$date, ams$value, type = 'b', col = 'red')
+    }
+    
   })
   # ---- POT ----
   output$POT_summary <- renderPrint({
@@ -1638,17 +1662,20 @@ server <- function(input, output) {
   })
   output$plot_POT_daily <- renderPlot({
     req(input$Dataset)
-    df = Dataset()
-    df$date = as.Date(df$date, format = "%Y-%m-%d")
-    df_pot = POT_func(df, input$threshold)
+    if (input$Sequencetype == "daily") {
+      df = Dataset()
+      df$date = as.Date(df$date, format = "%Y-%m-%d")
+      df_pot = POT_func(df, input$threshold)
       
-    plot(df$date, df$value, type = 'l', 
-         main = paste0('Sample size:', dim(df_pot)[1]),
-         xlab = 'date', ylab = 'RV')
+      plot(df$date, df$value, type = 'l', 
+           main = paste0('Sample size:', dim(df_pot)[1]),
+           xlab = 'date', ylab = 'RV')
+      
+      points(df_pot$date, df_pot$value, type='p', col='red')
+      points(df$date, rep(input$threshold, length(df$date)),
+             type = 'l', col = 'red', lty = 2)
+    }
     
-    points(df_pot$date, df_pot$value, type='p', col='red')
-    points(df$date, rep(input$threshold, length(df$date)),
-           type = 'l', col = 'red', lty = 2)
   })
   
   # ------ GEV introduction ------
