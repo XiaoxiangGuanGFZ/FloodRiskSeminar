@@ -1,9 +1,9 @@
 # -- 
-# flood risk seminar in 2022 Summer Semester 
+# flood risk seminar in Summer Semester 
 # Flood frequency analysis
 # Generalized Extreme Value distribution
 # Created: 22.05.2022
-# Last updated: 
+# Last updated: 25.02.2023
 # Xiaoxiang Guan (guan.xiaoxiang@gfz-potsdam.de)
 
 # typical data analysis procedure in R project 
@@ -25,6 +25,135 @@ setwd(wd)
 # install.packages("extRemes")  # package for extreme value statistics
 library(extRemes)  # load the package (objects,functions and codes)
 # to R environment to be applied.
+
+# --- Probability functions ----
+# d = density
+# p = probability distribution function
+# q = quantile function
+# r = random generation (random deviates)
+# Distribution Abbreviation
+# Beta - beta 
+# Logistic - logis
+# Binomial - binom 
+# Multinomial - multinom
+# Cauchy - cauchy 
+# Negative binomial - nbinom
+# Chi-squared - chisq 
+# Normal - norm
+# Exponential - exp 
+# Poisson - pois
+# Uniform - unif
+
+x <- seq(-3, 3, 0.01)
+y <- dnorm(x)
+plot(x, y)
+
+pnorm(1.96)
+qnorm(.9, mean=500, sd=100)
+
+rnorm(50, mean=50, sd=10)
+
+runif(20, min = 0, max = 2)
+
+#### data.frame manipulation -------
+# filtering a data frame by column-based conditions
+
+df[df$rainfall > 0 & df$year == 2000, ]
+df[df$rainfall > 0, ]
+df[df$rainfall > 0 & df$rainfall < 1, ]
+df[df$rainfall > 30 & df$discharge > mean(df$discharge), ]
+
+# creating new columns or remove column(s)----
+
+df$new_column <- seq(1, dim(df)[1])
+df$ratio_P_Ep <- df$rainfall / df$evaporation
+df$ratio_P_Q <- df$rainfall / df$discharge
+
+df[, -7]
+df[, !(colnames(df) %in% c('new_column'))]
+
+# aggregating data ----
+aggregate(rainfall ~ year, data = df, FUN = sum)
+aggregate(discharge ~ year, data = df, FUN = mean)
+
+rainydays <- function(x) {
+  return(sum(x>0))
+}
+
+aggregate(rainfall ~ year, data = df, FUN = rainydays)
+aggregate(rainfall ~ month + year, data = df, FUN = rainydays)
+
+
+### ------ graphic tool ----
+
+# basic graphs -----
+# histogram -----
+hist(iris$Sepal.Length )
+hist(iris$Sepal.Width )
+
+hist(iris$Sepal.Length,
+     xlab = 'Sepal length', 
+     ylab = 'Frequency', 
+     main = 'Histogram of Sepal length')
+
+
+# boxplot -------
+boxplot(iris$Sepal.Width)
+boxplot(iris$Sepal.Length)
+boxplot(iris$Sepal.Length,
+        col = 'red',
+        lty = 3,
+        ylab = 'Sepal length')
+
+# general plot function
+?plot
+# scatter plot ------
+plot(iris$Sepal.Length)
+plot(iris$Sepal.Length, cex = 2)
+
+plot(iris$Sepal.Length, type = 'p')
+plot(iris$Sepal.Length, type = 'p', col = 'red')
+plot(iris$Sepal.Length, iris$Sepal.Width,
+     type = 'p', 
+     pch = 1,
+     col = 'red',
+     xlab = 'Sepal Length',
+     ylab = 'Sepal width')
+
+plot(iris$Sepal.Length, iris$Petal.Length,
+     type = 'p', col = 'red',
+     xlab = 'Sepal Length',
+     ylab = '')
+
+points(iris$Sepal.Length, iris$Petal.Width,
+       type = 'p', col = 'blue')
+
+legend(x = 4.5, y = 6, c('Petal length', 'Petal width'),
+       col = c('red', 'blue'),
+       pch = c(1,1), title = 'legend')
+
+# line plot -----
+
+x <- seq(-3, 3, 0.01)
+y <- dnorm(x, mean = 0, sd = 1)
+y2 <- dnorm(x, mean = 1, sd = 1)
+plot(x, y, type = 'l')
+plot(x, y2, type = 'l')
+
+plot(x, y, type = 'l', 
+     lty = 1,
+     col = 'red',
+     ylab = 'PDF')
+points(x,y2, type ='l',
+       lty = 2,
+       col = 'blue')
+legend(x = -2.5, y = 0.3,
+       c('mean=0, sd=1', 'mean=1, sd=1'),
+       col = c('red', 'blue'),
+       lty = c(1,2),
+       title = 'parameters'
+)
+
 
 ################################ Data preparation ##############################
 
