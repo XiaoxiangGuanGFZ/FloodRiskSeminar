@@ -13,12 +13,48 @@ This application can also be accessed via the link: https://guanxiaoxiang-gfz.sh
 - **Extreme value statistics** focusing on the Generalized Extreme Value (GEV) distribution to domenstrate the basic concepts in extreme value theorem. This panel also provides interface to play the game of extreme value sampling, distribution fitting and uncertainty analysis
 - **Flood Frequency Analysis** introduing the concepts of hazard, exposure and vulnerability. 
 - **Time-varying Flood Risk** an interactive application to play the game of time-varying flood risk assessment, where the annual expected loss to flood hazards are computed as the indicator of risk based on assumed scenarios of hazard, exposure and vulnerability. 
+## Brief manual
+there are overall 5 panels in this application: Overview, Fundamental statistics, Extreme value statistics, Flood risk (FR) and Time-varying FR
+### 1. Fundamental statistics
+there are 3 sub-panels under the this panel: Random variable, Descriptive measures and Parameter estimation. The last two sub-panles mainly introduce the description and concepts on key moments and the 3 parameter estimation methods.
+    
+Under Random variable sub-panel, widgets are inserted for distribution pattern illustration for two types of curves: discrete and continuous random variables.  
+
+### 2. Extreme value statistics
+this panel covers the main issues on extreme value statistics includeing sampling method, Generalized Extreme Value (GEV), GEV parameter estimation and Uncertainty analysis.
+
+|sub-panel | Contents | functions |
+| -----    | ------   | --------- |
+| sampling method | block maxima and peak-over-threshold | data options: built-in or import from other sources (text files)
+| Generalized Extreme Value (GEV) | main concepts about GEV, features of GEV curves and parameters, and tail behaviours| animate widgets for GEV shape illustration |
+| GEV parameter estimation | estimation methods: graphic method and non-parametric methods | graphic method: empirical probability formula and interactive widgets for parameter estimation; non-parametric methods: maximum likelihood estimation and method of L-moments |
+|Uncertainty analysis | uncertainty sources: sample data, distribution type and parameter estimation method | widgets for argument adjustment to show the sensitivity of frequency analysis results to the uncertainty sources |
+
+### 3. Flood risk (FR)
+there are 3 sub-panels: Graphical concept, Hazard and Vulnerability. The hazard component in flood risk analysis is illustrated from the aspects of climate change and river training. 
+| aspect | contents | function |
+| ------ | -------- | -------- |
+|climate change | extreme value distribution |three GEV parameters: location, scale, and shape |
+| river training | changes in river channel cross-section | river water table - discharge relationship |
+
+### 4. Time-varying FR
+this panel provides the exercises on time-varying flood risk analysis. The time-varying components include water table - discharge relationship (H-Q relationship, river training), GEV parameters (climate change), exposure area and vulnerability. 
+
+| Component | Content | Contols |
+| --------- | ------- | ------- |
+| rivering training | H-Q relationship: $H = aQ^b$ | two time-varying parameters: a and b |
+| Climate change | GEV distrition | three GEV parameters |
+| Exposure | exposure area | time-varying exposure area (%/a) |
+| Vulnerability | vulnerability of different assets to flooding | time-varying vulnerability|
+
+There are also 5 quiz to be solved in the exercises panel. The tips and solution are also provided. 
+
 ## File structure
 - **data/** accomodates the example data of daily time series of dicharges
 - **rsconnect/**: application deploy info
 - **www/**: some illustrations used in this application
+- **app.R**: the source codes for the application
+- **vulnerability curve.R**: backup code for vulnerability component in flood risk analysis exercises
 
 ## Developer
 [Xiaoxiang Guan](https://www.gfz-potsdam.de/staff/guan.xiaoxiang/sec44)
-
-Email: guan@gfz-potsdam.de
