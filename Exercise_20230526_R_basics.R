@@ -156,7 +156,7 @@ sum(c(TRUE, TRUE, FALSE))
 #### ---- getting data into R ----------
 # data input and output
 # from keyboard ------
-data_example <- c() # data.frame
+data_example <- c(6,38, 30) # data.frame
 
 # from text file ------
 # import data as a data frame from a text file
@@ -172,7 +172,7 @@ tail(df, 6)
 # export / save a data frame into a text file
 write.table(
   df, 
-  file = '',
+  file = 'D:/test.csv',
   col.names = TRUE, row.names = FALSE, quote = F, append = F, sep = ','
 )
 
@@ -261,18 +261,25 @@ myfunc <- function(x1,x2) {
   y = (x1 + x2) * (x1 - x2)
   return(y)
 }
+
 myfunc(1.0, 2.0)
+
 
 # --- control structure ----
 # Logical operators
 1 < 3
 1.2 <= 2.0
+
 2 > 3
 1.25 >= 2
 
+x = 1.2
+
+1.1 == 1
+
 1.1 != 1
 
-c(1,2,1,3,2.5) > 1.5
+c(1, 2, 1, 3, 2.5) > 1.5
 
 1 %in% c(1,2,3,1.2)
 'xs' %in% c('XS', 'X')
@@ -292,7 +299,7 @@ x1 <= x2
 !(x1 <= x2)  # !: exclamation mark: not 
 
 # ---- if-else structure ----
-if (x1 >= x2) {
+if (x1 >= x2 & x3 < x4) {
   y = x1 - x2
 } else {
   y = x2 - x1
@@ -301,8 +308,10 @@ if (x1 >= x2) {
 
 # ---- loops -------
 Ids <- c(1, 2, 3, 4, 5)
-for (id in Ids) {
-  print(id)
+
+for (i in Ids) {
+  out = i * (-1)
+  print(out)
 }
 
 id = 1
@@ -367,12 +376,13 @@ x1[6]
 
 # select by an index vector
 x1[1:6]
-x1[c(1, 3, 5, 7, 9)]
+x1[c(1, 3, 5)]
 
 # select by logical expression
 x1[c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE,FALSE, FALSE, FALSE)]
 
 x1[x1 > 0]
+
 x1[x1 > mean(x1)]
 x1[x1 > 0 & x1 < 5]
 
@@ -411,7 +421,7 @@ df$age[2:3]
 df$age[df$age > 18]  # all rainy days
 df$age[df$age > 18 & df$age < 50]  # all rainy days in 2000
 
-df$age[df$status == "Poor"]
+df$age[df$status != "Poor"]
 
 length(df$age[df$status == "Poor"])
 max(df$age[df$status == "Poor"])
