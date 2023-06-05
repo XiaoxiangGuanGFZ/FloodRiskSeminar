@@ -48,8 +48,14 @@ x <- "pass"
 a <- c(1, 2, 5, 3, 6, -2, 4)  # <- assignment sign; numeric 
 a
 
+# access specific elements in the vector
+a[1]  # access the first element in vector a
+a[1:3]  # access the first 3 elements in a
+a[c(1, 3, 5, 7)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
+
 b <- c("one", "two", "three") # character
 b
+b[c(1, 3)]
 
 c <- c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE) # Boolean or logical
 c
@@ -97,9 +103,10 @@ patientdata <- data.frame(patientID, age, diabetes, status)
 patientdata
 
 # refer to the individual column in the data.frame
-patientdata$age
+patientdata$age   # access specific column with $ sign
 patientdata$diabetes
 
+# access data (elements) with [] operator
 patientdata[, 1]  # first column
 patientdata[1, ]  # first row
 patientdata[1, 1] # element located at 
@@ -131,7 +138,7 @@ list_example <- list(
 # data types and conversion ----
 x = 10.1
 is.numeric(x)
-is.integer(x)
+is.integer(x)  # is it a whole number?
 is.character(x)
 is.logical(x)
 is.double(x)
@@ -174,9 +181,17 @@ write.table(
   df, 
   file = 'D:/test.csv',
   col.names = TRUE, row.names = FALSE, quote = F, append = F, sep = ','
+  # col.names: whether the column names added to the first row in the output file?
+  # row.names: should the row names be printed as the first column in the output file?
+  # quote: should quotation sign be added to enclose character variables?
+  # append: output mode
+  # sep: separator
 )
 
 # from Excel --------
+# install the package and use certain functions to 
+# access the Excel file data
+
 install.packages('xlsx')
 library(xlsx)
 workbook <- "D:/myworkbook.xlsx"
@@ -204,14 +219,11 @@ c(1,2,3,4,5) * 2
 2 ^ 3  # Exponentiation
 
 2 ^ c(1,2,3,4)
-9 %% 4  # Modulus (x mod y)
-5 %/% 2  # Integer division
-
 
 abs()  # Absolute value
 sqrt() # square root 
 ceiling(x)  # Smallest integer not less than x
-floor(x) # Largest integer not greater than x
+floor(x)  # Largest integer not greater than x
 n = 0
 round(x, digits=n) # Rounds x to the specified number (n) of decimal places
 cos(x); sin(x); tan(x)  # Cosine, sine, and tangent
@@ -228,7 +240,7 @@ median(x) # Median
 sd(x) # Standard deviation
 var(x) # Variance
 
-range(x) # Range
+range(x) # Range, min-max
 sum(x)
 max(x)
 min(x)
@@ -273,23 +285,23 @@ myfunc(1.0, 2.0)
 2 > 3
 1.25 >= 2
 
-x = 1.2
+x = 1.2  # assignment operator
 
-1.1 == 1
-
+1.1 == 1  # comparison (equality) operator
 1.1 != 1
 
-c(1, 2, 1, 3, 2.5) > 1.5
+c(1, 2, 1, 3, 2.5) > 1.5 # perform vectorized comparison 
 
-1 %in% c(1,2,3,1.2)
+1 %in% c(1,2,3,1.2)  # is 1 included in the vector right to the %in% operator?
 'xs' %in% c('XS', 'X')
 
-x1 <- 1.5
+x1 <- 1.5  # <- assignment operator 
 x2 <- 2.5
 x3 <- 1.6
 x4 <- 0.6
 
 #  Logical Operators
+# chain multiple test expressions
 x1 > x2 & x3 < x4   # &: and
 x1 <= x2 & x3 <= x4 # &: and
 x1 > x2 | x3 <= x4  # |: or 
@@ -323,22 +335,22 @@ while (id <= 5) {
 #### ---- Data manipulation -----
 
 # variable creation, adding, altering ----
-# creating numeric vectors
+# data creating 
 x <- NULL
 x <- 0
-x <- c(1,2,3,4,5,6)
+x <- c(1,2,3,4,5,6)  # numeric vectors
+# altering
 x[1]
 x[2] <- 0
 x[5] <- 11
 
 # creating logical vectors
-x <- c(TRUE, FALSE, FALSE)
+x <- c(TRUE, FALSE, FALSE)  # direct creation 
 x[2] <- TRUE
 c(x, c(TRUE, FALSE))
 
 x1 <- c(0.1, 1, 1.2, 0.25, 0.56, 5)
-
-x1 < 0.5
+x1 < 0.5  # create from comparison expression 
 x1 > 0.5
 
 # creating character vectors
@@ -362,7 +374,7 @@ status <- c("Poor", "Improved", "Excellent", "Poor", "Poor", "Improved")
 df <- data.frame(patientID, age, diabetes, status)
 df
 
-colnames(df)
+colnames(df)  # access the column names
 colnames(df) <- c("c1", "c2", "c3", "c4")  # rename the columns
 colnames(df) <- c("patientID", "age", "diabetes", "status")  # rename the columns
 
@@ -370,23 +382,23 @@ colnames(df) <- c("patientID", "age", "diabetes", "status")  # rename the column
 
 x1 <- c(1.0, 0, -2.2, 2.5, -5.1, 6, 4.15, -1.5, 3.2)
 
-# select by index
+# select (access) by index (or position)
 x1[1]
 x1[6]
 
-# select by an index vector
+# select by an index (position) vector
 x1[1:6]
 x1[c(1, 3, 5)]
 
 # select by logical expression
 x1[c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE,FALSE, FALSE, FALSE)]
 
-x1[x1 > 0]
+x1[x1 > 0] # select all the elements in x1 greater than 0 (positive values)
 
-x1[x1 > mean(x1)]
-x1[x1 > 0 & x1 < 5]
+x1[x1 > mean(x1)]  # select all the elements in x1 greater than the average
+x1[x1 > 0 & x1 < 5] 
 
-x1[-2]  # exclude the 2nd value, 
+x1[-2]  # exclude the 2nd value 
 
 # filter a data frame with two dimension
 # select by a index
@@ -396,7 +408,7 @@ df[3, 2]
 # select one row of data (observation) by index
 df[1, ]
 
-# select on columm (field) by index
+# select on column (field) by index
 df[, 1]
 
 # select by name
@@ -416,12 +428,12 @@ df[2:4, c('patientID', 'age')]
 
 df$age   # then all select methods for vectors are also valid
 
-df$age[1]
+df$age[1]  # just address df$age as a general vector
 df$age[2:3]
 df$age[df$age > 18]  # all rainy days
 df$age[df$age > 18 & df$age < 50]  # all rainy days in 2000
 
-df$age[df$status != "Poor"]
+df$age[df$status != "Poor"]  # filter one column based on another column
 
 length(df$age[df$status == "Poor"])
 max(df$age[df$status == "Poor"])
