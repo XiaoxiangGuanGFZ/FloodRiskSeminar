@@ -82,7 +82,6 @@ df$rainfall[df$rainfall > 0]
 df$rainfall[df$rainfall > mean(df$rainfall)]
 df$rainfall[df$rainfall > median(df$rainfall)]
 
-
 # filtering (sub-setting) a data frame by column-based conditions
 # filtering based on one column
 df[df$rainfall > 0, ]
@@ -97,12 +96,12 @@ df[df$rainfall > 30 & df$discharge > mean(df$discharge), ]
 df[df$rainfall > 30 & df$discharge > mean(df$discharge) & df$y == 2000, ]
 
 # creating new columns or remove column(s)----
-
 df$new_column <- seq(1, dim(df)[1])  # just like vector assignment
 df$ratio_P_Ep <- df$rainfall / df$evaporation  # from existing columns arithmetic
 df$ratio_P_Q <- df$rainfall / df$discharge
 
-df[, -2]  # remove the 2nd column
+# remove the 2nd column
+df[, -2]  
 
 # aggregating data ----
 # Splits the data into subsets, 
@@ -134,7 +133,7 @@ aggregate(rainfall ~ month + year, data = df, FUN = rainydays)
 ### ------ built-in graphic tool -------------
 
 # basic graphs -----
-# histogram -----
+# histogram 
 hist(df$rainfall )
 hist(df$discharge )
 
@@ -144,14 +143,14 @@ hist(df$rainfall,
      main = 'Histogram of rainfall')
 
 
-# boxplot -------
+# boxplot
 boxplot(df$rainfall)
 boxplot(df$rainfall,
         ylab = 'rainfall (mm)')
 
 # general plot function
 ?plot
-# scatter plot ------
+# scatter plot
 plot(df$rainfall )
 
 plot(df$rainfall, col = 'red')
@@ -163,7 +162,7 @@ plot(df$rainfall, df$discharge,
      ylab = 'discharge',
      main = "plot title")
 
-# line plot -----
+# line plot
 
 x <- seq(-3, 3, 0.01)
 y <- dnorm(x, mean = 0, sd = 1)
@@ -193,17 +192,12 @@ legend(x = -2.5, y = 0.3,
 # 5. display the data
 # 6. presentation
 
+
+####################### flood frequency analysis ####################
 # first create project folder and save there the data file in subfolder "Data"
 # then File --> New Project --> Existing directory
 # getwd() should give now the project directory
 wd <- 'D:/FloodRiskSeminar/data/'
-
-# install packages required in this project
-# install.packages("extRemes")  # package for extreme value statistics
-library(extRemes)  # load the package (objects,functions and codes)
-# to R environment to be applied.
-
-####################### Data preparation ####################
 
 # read (import) data from file
 df_discharge = read.table(file = paste0(wd, "Example_data.csv"), 
@@ -220,33 +214,7 @@ head(AMS)  # check the results
 #   col.names = F, row.names = F, quote = F, sep = ','
 # )
 
-#####################~Data preparation~##############
-
-AMS$m_rank = rank(AMS$discharge) # rank of the values
-AMS$P = round(AMS$m_rank / (1 + dim(AMS)[1]), 4) # empirical probability
-# dim(AMS)[1]: the first dimension of data frame AMS, 
-#   namely the number of rows (the number of years, the sample size)
-
-# round(x, n): round() function rounds the values to 
-#   the specified number of decimal places (default 0)
-
-AMS$ReturnPeriod_T = round(1 / (1 - AMS$P), 1) # # empirical return period
-
-plot(log10(AMS$ReturnPeriod_T), AMS$discharge, 
-     # first two parameters: mapping to x and y axis respectively
-     main = 'Return level plot',  # title of the plot
-     xlab = 'return period: years',  # the label of x axis
-     ylab = 'Return level (Discharge: m3/s)',  # the label of y axis
-     type = 'p',  # the type of the plot
-     xaxt = "n"  # hide the tick labels of x axis
-     )
-axis(1, # identity No. of x axis
-     labels = c(1, 5, 10, 20, 50, 100), # customized labels
-     at = log10(c(1, 5, 10,20, 50, 100))  # locations the labels to be put
-     )  # customize the tick labels in x axis
-
-
-####################### Exploratory data analysis ####################
+#------ Exploratory data analysis -------
 plot(df_discharge$discharge, # variable for x axis is neglected, 
      type = "l",
      col = 'lightblue',
@@ -270,22 +238,28 @@ hist(AMS$discharge)  # histogram
 boxplot(AMS$discharge) # boxplot
 
 
-############################ Flood frequency analysis ######################
+#------- GEV fitting --------
 
 #### 1. Fit the Generalized Extreme Value distribution (GEV) to the annual maxima ###
 
-# load needed package
-library(extRemes)
+# install packages required in this project
+# install.packages("extRemes")  # package for extreme value statistics
+library(extRemes)  # load the package (objects,functions and codes)
+# to R environment to be applied.
 
-# fit the GEV
+
+# fit the GEV by using fevd() function in `extRemes` package
 GEV_mle = fevd(AMS$discharge, # extreme variable
                method = "MLE", # parameter estimation method
                type = "GEV"  # probability distribution type
                )
 
-GEV_mle  # check the results
-GEV_mle$results$par  # obtain the estimated 3 GEV parameters
-GEV_mle$results$par[1]  # here, location parameter
+GEV_mle  # check the results of GEV fitting 
+GEV_mle$results$par  # the estimated 3 GEV parameters
+GEV_mle$results$par[1]  # location parameter
+GEV_mle$results$par[2]  # scale parameter
+GEV_mle$results$par[3]  # shape parameter
+
 
 # The package extRemes offers the possibility to plot diagnostic plots
 
@@ -303,25 +277,42 @@ plot.fevd(GEV_mle, type = "primary")
 dev.off()   # return to normal plotting without subplots
 
 
-#### Exercises
+# -------------- Exercises 1 ------------------
 
-# (1) do the GEV distribution fitting to annual maximum daily  
-#   discharge in data file 'EXAMPLE_Chitan_Q_daily.txt'. 
+# (1) get data into R: ./data/Example_data.csv, use read.table() function
 df <- read.table(
   # fill the parameters
-  'Example_data.csv', header = T, sep = ','
 )
 
-AMS <- aggregate(discharge~year, data = df, FUN = max)
+
+# (2) Derive the annual maximum discharge series 
+# hint: AMS <- aggregate(discharge~year, data = df, FUN = max)
 
 
-revd(50, loc = ,scale = ,shape = , type = "GEV")
+# (3) Estimate the GEV parameters for annual maximum discharge
+# hint: fevd()
 
-# (2) do the GEV distribution fitting to seasonal extreme daily discharge
-# two seasons in a calendar year: 
-# summer: from May to October
-# Winter: November, December, and January to April
+# (4) Generate 100 random numbers based on the estimated GEV parameters
+# hint: revd(100, loc = ,scale = ,shape = , type = "GEV")
 
+
+
+# ----------------- Exercise 2 ------------------
+# (1) In case, the flood defense water level is 3.8 m, 
+#    then a flood happens, with the discharge of 11000 m3/s, 
+#    what is the expected economic loss?
+
+
+   
+# (2) In case, the flood defense water level is 3.8 m, 
+#   generate 100 years of GEV-distributed annual maximum discharge series, 
+#   calculate the mean annual expected economic loss. 
+
+
+
+# (3) Design the H_defense which could maintain the 
+#   mean annual expected economic loss 
+#   no greater than 1.5 million $ for the following 100 years.
 
 x = seq(0, 1.2, 0.01)
 y = NULL
