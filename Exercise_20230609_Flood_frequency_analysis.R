@@ -25,7 +25,7 @@
 # Poisson - pois
 # Uniform - unif
 
-x <- seq(-3, 3, 0.01)
+x <- seq(-3, 3, 0.01)  # sequence function, 
 # dnorm gives the density, 
 y <- dnorm(x, mean = 0, sd = 1)
 plot(x, y)
@@ -194,9 +194,6 @@ legend(x = -2.5, y = 0.3,
 
 
 ####################### flood frequency analysis ####################
-# first create project folder and save there the data file in subfolder "Data"
-# then File --> New Project --> Existing directory
-# getwd() should give now the project directory
 wd <- 'D:/FloodRiskSeminar/data/'
 
 # read (import) data from file
