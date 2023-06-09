@@ -258,22 +258,6 @@ GEV_mle$results$par[2]  # scale parameter
 GEV_mle$results$par[3]  # shape parameter
 
 
-# The package extRemes offers the possibility to plot diagnostic plots
-
-plot.fevd(GEV_mle, type = "probprob") # Probability-probability plot
-# the Model vs. Empirical probabilities; main = 'Probability plot'
-
-plot.fevd(GEV_mle, type = "qq") # Quantile-Quantile (QQ) plot; main = 'Quantile plot'
-
-plot.fevd(GEV_mle, type = "density") # Compare modeled and empirical density function
-
-plot.fevd(GEV_mle, type = "rl")   # Return level plot with confidence intervals (5%, 95%)
-# 'Return level plot'
-
-plot.fevd(GEV_mle, type = "primary")
-dev.off()   # return to normal plotting without subplots
-
-
 # -------------- Exercises 1 ------------------
 
 # (1) get data into R: ./data/Example_data.csv, use read.table() function
@@ -288,6 +272,7 @@ df <- read.table(
 
 # (3) Estimate the GEV parameters for annual maximum discharge
 # hint: fevd()
+
 
 # (4) Generate 100 random numbers based on the estimated GEV parameters
 # hint: revd(100, loc = ,scale = ,shape = , type = "GEV")
@@ -311,18 +296,3 @@ df <- read.table(
 #   mean annual expected economic loss 
 #   no greater than 1.5 million $ for the following 100 years.
 
-x = seq(0, 1.2, 0.01)
-y = NULL
-for (i in 1:length(x)) {
-  if (x[i] <= 0.15){
-    y[i] = 0
-  } else if (x[i] <= 1) {
-    y[i] = (x[i] - 0.15) * 8
-  } else {
-    y[i] = (1 - 0.15) * 8
-  }
-}
-plot(x, y, type = 'l',
-     xlab = 'Exceeding level Hf-Hd (m)',
-     ylab = 'Economic loss (million $)',
-     main = "Vulnerability")
