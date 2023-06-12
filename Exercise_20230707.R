@@ -207,7 +207,7 @@ df <- read.table(
 
 
 
-# (3) Design the H_defense which could maintain the 
+# (3) Design the H_defense which could keep the 
 #   mean annual expected economic loss 
 #   no greater than 1.5 million $ for the following 100 years.
 
