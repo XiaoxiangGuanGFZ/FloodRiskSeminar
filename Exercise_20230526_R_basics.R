@@ -63,7 +63,7 @@ c
 d <- 1:20
 d
 
-e <- seq(from = 1, to = 20, by = 1)
+e <- seq(from = 1, to = 20, by = 2) # sequence
 e
 
 # Matrices ------
@@ -171,6 +171,7 @@ df <- read.table(
   file = 'D:/FloodRiskSeminar/data/Example_data.csv', # filepath + file name
   header = TRUE, sep = ','
 )
+
 ?read.table
 # the parameters in read.table
 head(df, 6)
@@ -201,7 +202,7 @@ mydataframe <- read.xlsx(workbook, 1)
 #### ------ Function and loops --------
 
 # basic functions ----
-length()  # Gives the number of elements/components.
+length(c(1,2,3,4))  # Gives the number of elements/components.
 
 dim(df)  # Gives the dimensions of an object.
 str(df)  # Gives the structure of an object.
@@ -220,8 +221,8 @@ c(1,2,3,4,5) * 2
 
 2 ^ c(1,2,3,4)
 
-abs()  # Absolute value
-sqrt() # square root 
+abs(-0.1253)  # Absolute value
+sqrt(4) # square root 
 ceiling(x)  # Smallest integer not less than x
 floor(x)  # Largest integer not greater than x
 n = 0
@@ -354,7 +355,7 @@ x1 < 0.5  # create from comparison expression
 x1 > 0.5
 
 # creating character vectors
-x <- c('a', 'b', 'c')
+x <- c('a', 'b', 'c', 'f')
 as.character(c(1,2,3))
 
 x[1]<- 'd'
@@ -462,7 +463,7 @@ rbind(df1, c(4,'d'))
 # getting data into R and find data file here: 
 #     data/Example_data.csv, use read.table() function
 df <- read.table(
-  #
+  # 
   # fill the parameters here
 )
 
