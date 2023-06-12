@@ -18,7 +18,8 @@ This repository contains the materials prepared for the flood risk seminar given
 ## Timetable
 - 26.05.2023: Flood risk exercise: R basics
 - 09.06.2023: Flood risk exercise: Flood risk analysis
-- 07.07.2023: Rime-varying Flood risk exercise
+- 16.06.2023: Flood risk exercise: Flood risk analysis
+- 14.07.2023: Rime-varying Flood risk exercise
 - 14.07.2023: Rime-varying Flood risk exercise
 
 ## Author
