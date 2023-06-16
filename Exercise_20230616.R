@@ -11,10 +11,10 @@
 # ---- if-else structure ----
 x1 = -1.25
 
-if (x1 >= 0 ) {
+if (x1 >= 0 ) { #if it is non-negative, print it
   print( x1 )
 } else {
-  print( -x1 )
+  print( -x1 )  # if it is negative, print its opposite
 }
 
 
@@ -45,7 +45,7 @@ View(df)
 colnames(df)
 dim(df)
 
-### ----- access the columns (vectors) -----
+### ----- access and describe the columns (vectors) -----
 df$y  
 df$rainfall
 
@@ -69,7 +69,8 @@ df$discharge[1:100]  # access a sequence of elements
 sort(df$rainfall)  # sort specific column like vectors
 df[order(df$rainfall), ]  # sort the entire data.frame based on one column "rainfall"
 
-### ---- filtering the column in data.frame ----
+### ------------- filtering the column in data.frame ----------
+# columns are manipulated as vectors
 df$rainfall[df$rainfall > 0]
 df$rainfall[df$rainfall > mean(df$rainfall)]
 df$rainfall[df$rainfall > median(df$rainfall)]
