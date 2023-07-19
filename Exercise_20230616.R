@@ -82,7 +82,7 @@ df[df$rainfall > mean(df$rainfall), ]
 
 # ---- multiple test expressions ----
 #    combine by logical operator
-df[df$rainfall > 0 & df$year == 2000, ]
+df[df$rainfall > 0 & df$y == 1999, ]
 df[df$rainfall > 0 & df$rainfall < 1, ]
 
 # ---- filtering based on multiple columns ----
@@ -97,6 +97,7 @@ df$ratio_P_Q <- df$rainfall / df$discharge
 ### ---- remove columns from the data.frame ----
 df <- df[, -2]  # remove the 2nd column from df
 
+-c(1,2,3)
 
 ### ---- aggregating data -----
 # Splits the data into subsets, 
@@ -121,8 +122,8 @@ rainydays <- function(x) {
   return(n)  # return the output
 }
 
-aggregate(rainfall ~ year, data = df, FUN = rainydays)
-aggregate(rainfall ~ month + year, data = df, FUN = rainydays)
+aggregate(rainfall ~ y, data = df, FUN = rainydays)
+aggregate(rainfall ~ m + y, data = df, FUN = rainydays)
 
 
 ####################### flood frequency analysis ####################
@@ -133,6 +134,7 @@ df_discharge = read.table(file = "Example_data.csv",
                           header = TRUE, sep = ',')
 head(df_discharge)  # check the data
 
+colnames(df_discharge) <- c()
 
 # extract annual maximum discharge
 AMS = aggregate(discharge ~ year, data = df_discharge, FUN = max)
@@ -183,7 +185,8 @@ df <- read.table(
 
 
 # (2) Derive the annual maximum discharge series 
-# hint: AMS <- aggregate(discharge~year, data = df, FUN = max)
+# hint: 
+AMS <- aggregate(discharge~year, data = df, FUN = max)
 
 
 # (3) Estimate the GEV parameters for annual maximum discharge
