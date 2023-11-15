@@ -76,13 +76,13 @@ Table_exposure <- data.frame(
   # 5=Commercial, multi-storey 
   # 6=Other buildings
   # 
-  "Height" = c(3.89,4.14,4.31,4.51,4.75,
+  "Height" = round(c(3.89,4.14,4.31,4.51,4.75,
                3.58,3.88,4.08,4.29,4.4,4.53,4.76,4.91,
                3.68,4.13,4.39,4.7,4.86,3.89,
                4.19,4.38,4.39,4.86,
                3.64,3.87,4.27,4.64,4.88,
                3.5,3.52,3.71,3.83,4.08,
-               4.26,4.4,4.55,4.74,4.91) - 3.4,
+               4.26,4.4,4.55,4.74,4.91) - 3.4, 2),
   "Unitvalue" = c(4500,4500,4500,4500,4500,4500,4500,4500,4500,
                   4500,4500,4500,4500,3000,3000,3000,3000,3000,
                   2000,2000,2000,2000,2000,2000,2000,2000,2000,
@@ -155,11 +155,11 @@ Table_susceptibility_functions <- data.frame(
 # --------- define function (global) -----------
 n_gev_random <- function(n_mu, scale, shape) {
   # generate the GEV-distributed random variables (samples) with different
-  # mu (location parameter)
+  # loc (location parameter)
   n = length(n_mu)
   out = NULL
   for (i in 1:n) {
-    out[i] = rgev(1, mu = n_mu[i], sigma = scale, xi = shape)
+    out[i] = evd::rgev(1, loc = n_mu[i], scale = scale, shape = shape)
   }
   out[out <= 0] = mean(out[out > 0])
   return(out)
@@ -1681,14 +1681,14 @@ server <- function(input, output) {
   # ------ GEV introduction ------
   output$GEV_plot_pdf <- renderPlot({
     quantiles <- sort(runif(500, 0, 1))
-    x <- qgev(quantiles, 
-              xi = input$GEV_para_xi, 
-              sigma = input$GEV_para_sigma, 
-              mu = input$GEV_para_mu)
-    density <- dgev(x, 
-                    xi = input$GEV_para_xi, 
-                    sigma = input$GEV_para_sigma, 
-                    mu = input$GEV_para_mu)
+    x <- evd::qgev(quantiles, 
+              shape = input$GEV_para_xi, 
+              scale = input$GEV_para_sigma, 
+              loc = input$GEV_para_mu)
+    density <- evd::dgev(x, 
+                    shape = input$GEV_para_xi, 
+                    scale = input$GEV_para_sigma, 
+                    loc = input$GEV_para_mu)
     df <- data.frame(
       'RV' = x,
       'PDF' = density
@@ -1697,14 +1697,14 @@ server <- function(input, output) {
   })
   output$GEV_plot_cdf <- renderPlot({
     quantiles <- sort(runif(500, 0, 1))
-    x <- qgev(quantiles, 
-              xi = input$GEV_para_xi, 
-              sigma = input$GEV_para_sigma, 
-              mu = input$GEV_para_mu)
-    probability <-  pgev(x, 
-                         xi = input$GEV_para_xi, 
-                         sigma = input$GEV_para_sigma, 
-                         mu = input$GEV_para_mu)
+    x <- evd::qgev(quantiles, 
+              shape = input$GEV_para_xi, 
+              scale = input$GEV_para_sigma, 
+              loc = input$GEV_para_mu)
+    probability <-  evd::pgev(x, 
+                         shape = input$GEV_para_xi, 
+                         scale = input$GEV_para_sigma, 
+                         loc = input$GEV_para_mu)
     df <- data.frame(
       'RV' = x,
       'CDF' = probability
@@ -1714,23 +1714,23 @@ server <- function(input, output) {
   
   output$GEV_3_com_pdf <- renderPlot({
     quantiles <- sort(runif(500, 0, 1))
-    x <- qgev(quantiles, 
-              xi = 0, 
-              sigma = 10, 
-              mu = 30)
-    d_gumbel <-  dgev(x, 
-                      xi = 0, 
-                      sigma = 10, 
-                      mu = 30
+    x <- evd::qgev(quantiles, 
+              shape = 0, 
+              scale = 10, 
+              loc = 30)
+    d_gumbel <-  evd::dgev(x, 
+                      shape = 0, 
+                      scale = 10, 
+                      loc = 30
     )
-    d_frechet <- dgev(x, 
-                      xi = 0.2, 
-                      sigma = 10, 
-                      mu = 30)
-    d_weibull <- dgev(x, 
-                      xi = -0.2, 
-                      sigma = 10, 
-                      mu = 30)
+    d_frechet <- evd::dgev(x, 
+                      shape = 0.2, 
+                      scale = 10, 
+                      loc = 30)
+    d_weibull <- evd::dgev(x, 
+                      shape = -0.2, 
+                      scale = 10, 
+                      loc = 30)
     
     plot(x, d_gumbel, type = 'l', lty = 2, col = 'red', 
          main = 'PDF', ylab = 'PDF', xlab = "RV")
@@ -1741,23 +1741,23 @@ server <- function(input, output) {
   })
   output$GEV_3_com_cdf <- renderPlot({
     quantiles <- sort(runif(500, 0, 1))
-    x <- qgev(quantiles, 
-              xi = 0, 
-              sigma = 10, 
-              mu = 30)
-    p_gumbel <-  pgev(x, 
-                      xi = 0, 
-                      sigma = 10, 
-                      mu = 30
+    x <- evd::qgev(quantiles, 
+              shape = 0, 
+              scale = 10, 
+              loc = 30)
+    p_gumbel <-  evd::pgev(x, 
+                      shape = 0, 
+                      scale = 10, 
+                      loc = 30
     )
-    p_frechet <- pgev(x, 
-                      xi = 0.2, 
-                      sigma = 10, 
-                      mu = 30)
-    p_weibull <- pgev(x, 
-                      xi = -0.2, 
-                      sigma = 10, 
-                      mu = 30)
+    p_frechet <- evd::pgev(x, 
+                      shape = 0.2, 
+                      scale = 10, 
+                      loc = 30)
+    p_weibull <- evd::pgev(x, 
+                      shape = -0.2, 
+                      scale = 10, 
+                      loc = 30)
     
     plot(x, p_gumbel, type = 'l', lty = 2, col = 'red', 
          main = 'CDF', ylab = 'CDF', xlab = "RV")
@@ -1802,18 +1802,18 @@ server <- function(input, output) {
   df_GM <- reactive({
     # req(input$Dataset)
     df_empirical = df_empirical_prob()
-    df_empirical$model_prob <- pgev(df_empirical$value, 
-                                    xi = input$GM_para_xi, 
-                                    sigma = input$GM_para_sigma, 
-                                    mu = input$GM_para_mu)
+    df_empirical$model_prob <- evd::pgev(df_empirical$value, 
+                                    shape = input$GM_para_xi, 
+                                    scale = input$GM_para_sigma, 
+                                    loc = input$GM_para_mu)
     df_empirical$model_T <- round(
       1/ (1-df_empirical$model_prob), 1
     )  # modeled probabilities
     df_empirical$model_value <- round(
-      qgev(df_empirical$P, # empirical probability
-           xi = input$GM_para_xi, 
-           sigma = input$GM_para_sigma, 
-           mu = input$GM_para_mu)
+      evd::qgev(df_empirical$P, # empirical probability
+           shape = input$GM_para_xi, 
+           scale = input$GM_para_sigma, 
+           loc = input$GM_para_mu)
     ) # modeled quantiles (return levels)
     df_empirical
   })
@@ -1824,10 +1824,10 @@ server <- function(input, output) {
     model_p = seq(min(df$P), max(df$P) + 0.001, 0.001)
     model_T = 1/(1-model_p)
     model_value <- round(
-      qgev(model_p, 
-           xi = input$GM_para_xi, 
-           sigma = input$GM_para_sigma, 
-           mu = input$GM_para_mu)
+      evd::qgev(model_p, 
+           shape = input$GM_para_xi, 
+           scale = input$GM_para_sigma, 
+           loc = input$GM_para_mu)
     ) # modeled quantiles (return levels)
     
     plot(log10(df$ReturnPeriod_T), df$value, 
@@ -1918,10 +1918,10 @@ server <- function(input, output) {
       model_p = seq(min(df$P), max(df$P) + 0.001, 0.001)
       model_T = 1/(1-model_p)
       model_value <- round(
-        qgev(model_p, 
-             xi = as.numeric(GEV_mle$results['shape']), 
-             sigma = as.numeric(GEV_mle$results['scale']), 
-             mu = as.numeric(GEV_mle$results['location']))
+        evd::qgev(model_p, 
+             shape = as.numeric(GEV_mle$results['shape']), 
+             scale = as.numeric(GEV_mle$results['scale']), 
+             loc = as.numeric(GEV_mle$results['location']))
       ) # modeled quantiles (return levels)
       
       plot(log10(df$ReturnPeriod_T), df$value, 
@@ -1992,11 +1992,11 @@ server <- function(input, output) {
     GEV_mle$shape = as.numeric(GEV_mle$results$par['shape'])
     
     return_period=input$SA_timeperiod_T
-    return_level = qgev( 
+    return_level = evd::qgev( 
       1 - 1/return_period,
-      mu = GEV_mle$location,
-      sigma = GEV_mle$scale,
-      xi = GEV_mle$shape
+      loc = GEV_mle$location,
+      scale = GEV_mle$scale,
+      shape = GEV_mle$shape
     )
     GEV_mle$return_period = return_period
     GEV_mle$return_level = return_level
@@ -2036,10 +2036,10 @@ server <- function(input, output) {
     GEV_mle$shape = as.numeric(GEV_mle$results$par['shape'])
     
     return_period= c(10, 50, 100, 200, 500)
-    return_level = qgev( 1 - 1/return_period,
-                         mu = GEV_mle$location,
-                         sigma = GEV_mle$scale,
-                         xi = GEV_mle$shape
+    return_level = evd::qgev( 1 - 1/return_period,
+                         loc = GEV_mle$location,
+                         scale = GEV_mle$scale,
+                         shape = GEV_mle$shape
     )
     GEV_mle$return_period = return_period
     GEV_mle$return_level = return_level
@@ -2053,10 +2053,10 @@ server <- function(input, output) {
     GEV_mle$scale = as.numeric(GEV_mle$results$par['scale'])
     
     return_period= c(10, 50, 100, 200, 500)
-    return_level = qgev( 1 - 1/return_period,
-                         mu = GEV_mle$location,
-                         sigma = GEV_mle$scale,
-                         xi = 0
+    return_level = evd::qgev( 1 - 1/return_period,
+                         loc = GEV_mle$location,
+                         scale = GEV_mle$scale,
+                         shape = 0
     )
     GEV_mle$return_period = return_period
     GEV_mle$return_level = return_level
@@ -2072,18 +2072,18 @@ server <- function(input, output) {
     model_p = seq(min(df$P), max(df$P) + 0.001, 0.001)
     model_T = 1/(1-model_p)
     model_value_GEV <- round(
-      qgev(
+      evd::qgev(
         model_p, 
-        xi = df_SA_distri_GEV$shape, 
-        sigma = df_SA_distri_GEV$scale, 
-        mu = df_SA_distri_GEV$location
+        shape = df_SA_distri_GEV$shape, 
+        scale = df_SA_distri_GEV$scale, 
+        loc = df_SA_distri_GEV$location
       )
     ) # modeled quantiles (return levels)
     model_value_Gumbel <- round(
-      qgev(model_p, 
-           xi = 0, 
-           sigma = df_SA_distri_Gumbel$scale, 
-           mu = df_SA_distri_Gumbel$location
+      evd::qgev(model_p, 
+           shape = 0, 
+           scale = df_SA_distri_Gumbel$scale, 
+           loc = df_SA_distri_Gumbel$location
       )
     ) # modeled quantiles (return levels)
     
@@ -2131,10 +2131,10 @@ server <- function(input, output) {
     GEV_mle$shape = as.numeric(GEV_mle$results['shape'])
     
     return_period= c(10, 50, 100, 200, 500)
-    return_level = qgev( 1 - 1/return_period,
-                         mu = GEV_mle$location,
-                         sigma = GEV_mle$scale,
-                         xi = GEV_mle$shape
+    return_level = evd::qgev( 1 - 1/return_period,
+                         loc = GEV_mle$location,
+                         scale = GEV_mle$scale,
+                         shape = GEV_mle$shape
     )
     GEV_mle$return_period = return_period
     GEV_mle$return_level = return_level
@@ -2150,16 +2150,16 @@ server <- function(input, output) {
     model_p = seq(min(df$P), max(df$P) + 0.001, 0.001)
     model_T = 1/(1-model_p)
     model_value_MLE <- round(
-      qgev(model_p, 
-           xi = df_SA_distri_GEV$shape, 
-           sigma = df_SA_distri_GEV$scale, 
-           mu = df_SA_distri_GEV$location)
+      evd::qgev(model_p, 
+           shape = df_SA_distri_GEV$shape, 
+           scale = df_SA_distri_GEV$scale, 
+           loc = df_SA_distri_GEV$location)
     ) # modeled quantiles (return levels)
     model_value_Lmoments <- round(
-      qgev(model_p, 
-           sigma = df_SA_method_GEV$scale, 
-           mu = df_SA_method_GEV$location,
-           xi = df_SA_method_GEV$shape
+      evd::qgev(model_p, 
+           scale = df_SA_method_GEV$scale, 
+           loc = df_SA_method_GEV$location,
+           shape = df_SA_method_GEV$shape
       )
     ) # modeled quantiles (return levels)
     
@@ -2207,10 +2207,10 @@ server <- function(input, output) {
     
     model_p = seq(min(df$P), max(df$P) + 0.001, 0.001)
     model_T = 1/(1-model_p)
-    model_value = qgev(model_p, 
-                       xi = input$FR_GEV_xi, 
-                       sigma = input$FR_GEV_sigma, 
-                       mu = input$FR_GEV_mu
+    model_value = evd::qgev(model_p, 
+                       shape = input$FR_GEV_xi, 
+                       scale = input$FR_GEV_sigma, 
+                       loc = input$FR_GEV_mu
     )
     
     plot(log10(df$ReturnPeriod_T), df$value, 
@@ -2371,10 +2371,10 @@ server <- function(input, output) {
     GEV_mle$shape = as.numeric(GEV_mle$results$par['shape'])
     
     return_period=input$SA_timeperiod_T
-    return_level = qgev( 1 - 1/return_period,
-                         mu = GEV_mle$location,
-                         sigma = GEV_mle$scale,
-                         xi = GEV_mle$shape)
+    return_level = evd::qgev( 1 - 1/return_period,
+                         loc = GEV_mle$location,
+                         scale = GEV_mle$scale,
+                         shape = GEV_mle$shape)
     GEV_mle$return_period = return_period
     GEV_mle$return_level = return_level
     GEV_mle
@@ -2385,11 +2385,11 @@ server <- function(input, output) {
   TVFR_df_threshold <- reactive({
     # req(input$Dataset)
     GEV_mle = TVFR_df_FFA()
-    return_level_Q = qgev(
+    return_level_Q = evd::qgev(
       1 - 1/input$TVFR_para_returnperiod,
-      mu = GEV_mle$location,
-      sigma = GEV_mle$scale,
-      xi = GEV_mle$shape
+      loc = GEV_mle$location,
+      scale = GEV_mle$scale,
+      shape = GEV_mle$shape
     )
     return_level_H = (input$TVFR_para_QT_a) * return_level_Q ^ (input$TVFR_para_QT_b)
     data.frame(
@@ -2590,9 +2590,9 @@ server <- function(input, output) {
     CR_mu = 0
     a = 0.748
     b = 0.23
-    return_level_Q = qgev(
+    return_level_Q = evd::qgev(
       1 - 1/20,  # return period of defense system
-      mu = mu, sigma = sigma, xi = xi
+      loc = mu, scale = sigma, shape = xi
     )
     return_level_H = a * return_level_Q ^ b  # defense water stage
     Inflation_rate = 0
@@ -2656,9 +2656,9 @@ server <- function(input, output) {
     returnperiods <- seq(10, 100, 10)  # *****
     return_level_H <- NULL
     for (i in 1:length(returnperiods)) {
-      return_level_Q = qgev(
+      return_level_Q = evd::qgev(
         1 - 1/returnperiods[i],  # return period of defense system
-        mu = mu, sigma = sigma, xi = xi
+        loc = mu, scale = sigma, shape = xi
       )
       return_level_H[i] = a * return_level_Q ^ b  # defense water stage
     }
@@ -2722,9 +2722,9 @@ server <- function(input, output) {
     a = seq(0.6, 0.9, 0.02) # ***** 0.748
     b = 0.23
     
-    return_level_Q = qgev(
+    return_level_Q = evd::qgev(
       1 - 1/20,  # return period of defense system
-      mu = mu, sigma = sigma, xi = xi
+      loc = mu, scale = sigma, shape = xi
     )
     return_level_H = a * return_level_Q ^ b  # defense water stage
     Inflation_rate = 0
@@ -2785,9 +2785,9 @@ server <- function(input, output) {
     a = 0.748
     b = 0.23
     
-    return_level_Q = qgev(
+    return_level_Q = evd::qgev(
       1 - 1/20,  # return period of defense system
-      mu = mu, sigma = sigma, xi = xi
+      loc = mu, scale = sigma, shape = xi
     )
     return_level_H = a * return_level_Q ^ b  # defense water stage
     Inflation_rate = 0
@@ -2854,9 +2854,9 @@ server <- function(input, output) {
     b = 0.23
     
     returnperiods = seq(10, 200, 10)
-    return_level_Q = qgev(
+    return_level_Q = evd::qgev(
       1 - 1/returnperiods,  # return period of defense system
-      mu = mu, sigma = sigma, xi = xi
+      loc = mu, scale = sigma, shape = xi
     )
     return_level_H = a * return_level_Q ^ b  # defense water stage
     Inflation_rate = 0
