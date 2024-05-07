@@ -373,7 +373,7 @@ loss_100 <- NULL
 
 ## change the defense water level for several times and 
 ## see the response from mean annual economic loss
-WL_defense <- 3.8
+WL_defense <- 3.33
 
 
 for (i in 1:100) {   # a for-loop, 

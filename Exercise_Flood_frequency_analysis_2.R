@@ -175,7 +175,7 @@ GEV_mle$results$par[2]  # scale parameter
 GEV_mle$results$par[3]  # shape parameter
 
 
-# -------------- Exercises 1 ------------------
+# -------------- Exercise 1 ------------------
 
 # (1) get data into R: ./data/Example_data.csv, use read.table() function
 setwd()  # set the work space
