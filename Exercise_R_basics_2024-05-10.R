@@ -19,7 +19,7 @@ x
 x <- 10.1
 x
 
-10.1 -> x
+10.1 -> x  # valid, but not common
 x
   
 is.numeric(x)
@@ -32,11 +32,20 @@ is.logical(x)
 # type conversion
 as.character(10)
 as.numeric('1.52') # convert from character to number
-as.numeric('xs')   # failed
-as.integer(10.54)  # convert to integer
-as.logical(5)      # TRUE: as long as it is a non-zero numerical value 
+as.numeric('xs')   # failed, xs is not a valid number
+as.integer(10.54)  # convert to integer, drop the numbers after decimal point
 
 # convert boolean to integer 
+
+# direction: from boolean to interge
+#  TRUE -- 1
+#  FALSE -- 0
+# direction: from number to boolean
+#  non-zero -- TRUE
+#  0 -- FALSE
+
+as.logical(5)      # TRUE: as long as it is a non-zero numerical value 
+as.logical(0) 
 
 as.numeric(TRUE)
 as.numeric(FALSE)
@@ -54,31 +63,23 @@ x <- 0.2  # a scalar is one-element vector
 x <- TRUE
 x <- "pass"
 
-a <- c(1, 2, 5, 3, 6, -2, 4)  # <- assignment sign; numeric 
+a <- c(1, 2, 5, 3)  # c() stands for "combine" 
 a
-b <- c(TRUE, FALSE, TRUE)
-c <- c("Name1", "Name2")
-
-d <- 1:5  # a numeric sequence from 1 to 5 with a step of 1
-d <- seq(1, 10, by = 2)
-
-# element indexing: access specific elements in the vector
-a[1]  # access the first element in vector a
-a[1:3]  # access the first 3 elements in a
-a[c(1, 3, 5, 7)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
 
 b <- c("one", "two", "three") # character
 b
-b[c(1, 3)]
 
 c <- c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE) # Boolean or logical
 c
 
-d <- 1:20
-d
+d <- 1:5  # a numeric sequence from 1 to 5 with a step of 1
+d <- seq(from = 1, to = 10, by = 2)
 
-e <- seq(from = 1, to = 20, by = 2) # sequence
-e
+# element indexing: access specific elements in the vector, [] operator
+a[1]  # access the first element in vector a
+a[1:3]  # access the first 3 elements in a
+a[c(1, 3, 1, 2)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
+
 
 # Matrices ------
 # A matrix is a two-dimensional array 
@@ -108,11 +109,12 @@ df <- data.frame(
   'column3' = c(TRUE, FALSE, TRUE)
 )  # create a data.frame from scratch
 
-# create data.frame from a couple of vectors
+# create data.frame from a couple of vectors with the same length
 patientID <- c(1, 2, 3, 4)
 age <- c(25, 34, 28, 52)
 diabetes <- c("Type1", "Type2", "Type1", "Type1")
 status <- c("Poor", "Improved", "Excellent", "Poor")
+
 patientdata <- data.frame(patientID, age, diabetes, status)
 patientdata
 
@@ -133,17 +135,11 @@ patientdata[1:1, 1:2] # subset
 
 # some features about df
 dim(patientdata)  # dimensions 
-dim(df)
 
 colnames(patientdata)  # column names
-colnames(df)
 
 row.names(patientdata)  # row names
-row.names(df)
 
-iris  # the built-in data set from R project
-colnames(iris)
-dim(iris)
 
 # list --------
 # a list is an ordered collection of objects (components)
