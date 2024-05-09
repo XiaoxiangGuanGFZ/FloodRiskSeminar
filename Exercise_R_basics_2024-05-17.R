@@ -3,20 +3,12 @@
 # R project language concepts and fundamentals
 # 
 # Created: 22.05.2022
-# Last updated: 25.05.2023
+# Last updated: 09.05.2024
 # Xiaoxiang Guan (guan.xiaoxiang@gfz-potsdam.de)
 # ---
 
 
 ### ------ Introduction to R ------
-#
-# work space --------
-
-getwd() # List/get/print the current working directory.
-
-setwd('D:/FloodRiskSeminar/')  #Changes the current working directory
-ls()   # Lists the objects in the current work space
-rm(objectlist)  # Removes (deletes) one or more objects.
 
 # packages -------
 install.packages('ggplot2') # install packages(s) into R environment
@@ -33,12 +25,48 @@ help(package="extRemes")
 # getting help in R --------
 
 help("iris") #Help on function foo (quotation marks optional)
-?iris
+?iris  # iris is a dataset that comes with R project
 # Lists all available example datasets contained in currently loaded packages
-data('iris') 
+View(iris)
 
 
-### ----- Data structures in R --------
+### ------ Data types and structures in R ------
+## ---- Data types ----
+x = 10.1
+x
+
+x <- 10.1
+x
+
+10.1 -> x
+x
+  
+is.numeric(x)
+is.integer(x)  # is it a integer number?
+is.character(x)
+is.logical(x)
+
+# test: x = 10
+
+# type conversion
+as.character(10)
+as.numeric('1.52') # convert from character to number
+as.numeric('xs')   # failed
+as.integer(10.54)  # convert to integer
+as.logical(5)      # TRUE: as long as it is a non-zero numerical value 
+
+# convert boolean to integer 
+
+as.numeric(TRUE)
+as.numeric(FALSE)
+
+1 + TRUE
+
+2 - TRUE * 2
+
+2 - FALSE
+
+## ----- Data structures in R --------
 
 # Vector ------
 x <- 0.2  # a scalar is one-element vector
@@ -47,8 +75,13 @@ x <- "pass"
 
 a <- c(1, 2, 5, 3, 6, -2, 4)  # <- assignment sign; numeric 
 a
+b <- c(TRUE, FALSE, TRUE)
+c <- c("Name1", "Name2")
 
-# access specific elements in the vector
+d <- 1:5  # a numeric sequence from 1 to 5 with a step of 1
+d <- seq(1, 10, by = 2)
+
+# element indexing: access specific elements in the vector
 a[1]  # access the first element in vector a
 a[1:3]  # access the first 3 elements in a
 a[c(1, 3, 5, 7)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
@@ -135,31 +168,6 @@ list_example <- list(
   'l4' = list(0)
 )
 
-# data types and conversion ----
-x = 10.1
-is.numeric(x)
-is.integer(x)  # is it a whole number?
-is.character(x)
-is.logical(x)
-is.double(x)
-is.vector(x)
-is.matrix(x)
-is.data.frame(x)
-
-as.character(10)
-as.numeric(c('10', '1.52', '4.6')) 
-as.numeric(c('xs', 'c0', ''))  # failed
-as.integer(10.54)
-as.logical(c(1, 0, 4, -1, 1.2, 0))  
-
-x1 <- c(1,2,3)
-x2 <- c('a', 'b', 'c')
-x1 + x2  # fail
-
-as.numeric(c(TRUE, TRUE, FALSE))
-sum(c(TRUE, TRUE, FALSE))
-1 + c(TRUE, TRUE, FALSE)
-
 #### ---- getting data into R ----------
 # data input and output
 # from keyboard ------
@@ -168,7 +176,8 @@ data_example <- c(6,38, 30) # data.frame
 # from text file ------
 # import data as a data frame from a text file
 df <- read.table(
-  file = 'D:/FloodRiskSeminar/data/Example_data.csv', # filepath + file name
+  # file path and name; we use slash sign / here 
+  file = 'D:/FloodRiskSeminar/data/Example_data.csv', 
   header = TRUE, sep = ','
 )
 
@@ -180,6 +189,10 @@ tail(df, 6)
 # export / save a data frame into a text file
 write.table(
   df, 
+  file = 'D:/test.csv')
+
+write.table(
+  df, 
   file = 'D:/test.csv',
   col.names = TRUE, row.names = FALSE, quote = F, append = F, sep = ','
   # col.names: whether the column names added to the first row in the output file?
@@ -188,15 +201,6 @@ write.table(
   # append: output mode
   # sep: separator
 )
-
-# from Excel --------
-# install the package and use certain functions to 
-# access the Excel file data
-
-install.packages('xlsx')
-library(xlsx)
-workbook <- "D:/myworkbook.xlsx"
-mydataframe <- read.xlsx(workbook, 1)
 
 
 #### ------ Function and loops --------
@@ -209,8 +213,10 @@ str(df)  # Gives the structure of an object.
 
 # mathematical ----
 1 + 1
-c(1,2,3,4,5) + 1  # the operations are performed vectorizedly
-c(1,2,3,4,5) + c(1,2,3,4,5)
+c(1,2,3,4,5) + 1  # the operations are performed in a vectorized manner
+c(1,2,3,4,5) + c(1,2,3,4,5)  # with the same element numbers
+
+c(1,2,3,4) + c(1,2) # it is valid, but dangerous; vectors with different length
 
 3 - 2 
 1 * 9 
@@ -223,15 +229,14 @@ c(1,2,3,4,5) * 2
 
 abs(-0.1253)  # Absolute value
 sqrt(4) # square root 
-ceiling(x)  # Smallest integer not less than x
-floor(x)  # Largest integer not greater than x
-n = 0
-round(x, digits=n) # Rounds x to the specified number (n) of decimal places
-cos(x); sin(x); tan(x)  # Cosine, sine, and tangent
 
-log(x,base=n)  # Logarithm of x to the base n
-log(x) # the natural logarithm.
-log10(x) # the common logarithm.
+x = 12.23134
+n = 2
+round(x, digits=n) # Rounds x to the specified number (n) of decimal places
+
+cos(x); sin(x); tan(x)  # Trigonometric functions: cosine, sine, and tangent
+
+log(x)  # the natural logarithm
 exp(x)  # Exponential function
 
 # statistical ----
