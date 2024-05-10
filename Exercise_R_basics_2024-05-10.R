@@ -13,10 +13,10 @@
 
 ### ------ Data types and structures in R ------
 ## ---- Data types ----
-x = 10.1
+x = 22
 x
 
-x <- 10.1
+x <- 182.1
 x
 
 10.1 -> x  # valid, but not common
@@ -59,9 +59,9 @@ as.numeric(FALSE)
 ## ----- Data structures in R --------
 
 # Vector ------
-x <- 0.2  # a scalar is one-element vector
-x <- TRUE
-x <- "pass"
+x <- 0.2    # one-element vector; numeric vector
+x <- TRUE   # logical vector
+x <- "pass" # character vector
 
 a <- c(1, 2, 5, 3)  # c() stands for "combine" 
 a
@@ -72,6 +72,8 @@ b
 c <- c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE) # Boolean or logical
 c
 
+## : operator to generate a numeric sequence, 
+#  by giving the starting and end value, the step is by default is 1
 d <- 1:5  # a numeric sequence from 1 to 5 with a step of 1
 d <- seq(from = 1, to = 10, by = 2)
 
@@ -107,7 +109,7 @@ df <- data.frame(
   'column1' = c(1, 2, 3),
   'column2' = c('a', 'b', 'c'),
   'column3' = c(TRUE, FALSE, TRUE)
-)  # create a data.frame from scratch
+)  # create a data.frame
 
 # create data.frame from a couple of vectors with the same length
 patientID <- c(1, 2, 3, 4)
@@ -125,18 +127,18 @@ patientdata$diabetes
 patientdata$diabetes[1:2]  # first 2 elements in "diabetes" column
 
 # access data (elements) with [] operator
-patientdata[, 1]  # first column
-patientdata[1, ]  # first row
-patientdata[1, 1] # element located at 1,1 
-patientdata[1:2, 2] # the first 2 elements in the 2nd column
-patientdata[1, 1:2] # the first 2 elements in the 1st row
-patientdata[1:1, 1:2] # subset 
+patientdata[1, 1]     # element located at 1,1
+patientdata[1:2, 2]   # the first 2 elements in the 2nd column
+patientdata[1, 1:2]   # the first 2 elements in the 1st row
+patientdata[1:1, 1:2] # subset
+patientdata[, 1]      # first column
+patientdata[1,]       # first row
+patientdata[]         # the entire data frame
 
-
-# some features about df
+# some attributes of df
 dim(patientdata)  # dimensions 
 
-colnames(patientdata)  # column names
+colnames(patientdata)  # column names, returns a character vector
 
 row.names(patientdata)  # row names
 
@@ -151,23 +153,20 @@ list_example <- list(
   'l4' = list(0)
 )
 
+
 #### ---- getting data into R ----------
 # data input and output
-# from keyboard ------
-data_example <- c(6,38, 30) # data.frame
 
 # from text file ------
 # import data as a data frame from a text file
 df <- read.table(
   # file path and name; we use slash sign / here 
-  file = 'D:/FloodRiskSeminar/data/Example_data.csv', 
+  file = 'file path to data/Example_data.csv', 
   header = TRUE, sep = ','
 )
 
-?read.table
-# the parameters in read.table
-head(df, 6)
-tail(df, 6)
+?read.table  # see the details about read.table()
+
 
 # export / save a data frame into a text file
 write.table(
@@ -177,7 +176,7 @@ write.table(
 write.table(
   df, 
   file = 'D:/test.csv',
-  col.names = TRUE, row.names = FALSE, quote = F, append = F, sep = ','
+  col.names = TRUE, row.names = FALSE, quote = FALSE, append = FALSE, sep = ','
   # col.names: whether the column names added to the first row in the output file?
   # row.names: should the row names be printed as the first column in the output file?
   # quote: should quotation sign be added to enclose character variables?
@@ -186,7 +185,7 @@ write.table(
 )
 
 
-#### ------ Function and loops --------
+#### ------ Function --------
 
 # basic functions ----
 length(c(1,2,3,4))  # Gives the number of elements/components.
@@ -196,19 +195,18 @@ str(df)  # Gives the structure of an object.
 
 # mathematical ----
 1 + 1
-c(1,2,3,4,5) + 1  # the operations are performed in a vectorized manner
-c(1,2,3,4,5) + c(1,2,3,4,5)  # with the same element numbers
-
-c(1,2,3,4) + c(1,2) # it is valid, but dangerous; vectors with different length
 
 3 - 2 
 1 * 9 
-c(1,2,3,4,5) * 2
 9 / 3 
-9 / c(3, 2, 1)
 2 ^ 3  # Exponentiation
 
-2 ^ c(1,2,3,4)
+c(3, 2, 1) / 2
+c(1,2,3,4,5) * 2
+c(1,2,3,4,5) + 1  # the operations are performed in a vectorized manner
+c(1,2,3,4,5) + c(1,2,3,4,5)  # with the same element numbers
+c(1,2,3,4) + c(1,2) # it is valid, but dangerous; vectors with different length
+
 
 abs(-0.1253)  # Absolute value
 sqrt(4) # square root 
@@ -224,12 +222,12 @@ exp(x)  # Exponential function
 
 # statistical ----
 x <- c(0.1, 1, 1.2, 0.25, 0.56, 5)
-mean(x) # Mean
-median(x) # Median
-sd(x) # Standard deviation
-var(x) # Variance
+mean(x)    # Mean
+median(x)  # Median
+sd(x)      # Standard deviation
+var(x)     # Variance
 
-range(x) # Range, min-max
+range(x)   # Range, min-max
 sum(x)
 max(x)
 min(x)
@@ -244,10 +242,20 @@ sort(x, decreasing = T)
 
 # character functions ----
 x <- "xjhadnc_102"
-nchar(x) # Counts the number of characters of x.
+nchar(x) # Counts the number of characters in x.
 
 paste('hjjx', ';', '125', 1425, sep = "")  # string concatenation
 paste('hjjx', ';', '125', 1425, sep = "-") 
+
+# data frame functions ----
+
+head(df, 6)  # the first several (6) rows of df
+tail(df, 6)  # the last several (6) rows of df
+View(df)     # view the df in the table form
+colnames(df) # column names 
+dim(df)      # dimensions 
+str(df)      # check the structure of the df
+
 
 
 ### ------- Exercise with R - R basics -----------
