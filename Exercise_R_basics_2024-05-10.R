@@ -80,7 +80,7 @@ d <- seq(from = 1, to = 10, by = 2)
 # element indexing: access specific elements in the vector, [] operator
 a[1]  # access the first element in vector a
 a[1:3]  # access the first 3 elements in a
-a[c(1, 3, 1, 2)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
+a[c(1, 3, 1, 2)]  # access multiple elements in the vector with position vector c(1, 3, 1, 2)
 
 
 # Matrices ------
