@@ -161,9 +161,10 @@ list_example <- list(
 # import data as a data frame from a text file
 df <- read.table(
   # file path and name; we use slash sign / here 
-  file = 'file path to data/Example_data.csv', 
+  file = 'D:/FloodRiskSeminar/data/Example_data.csv', 
   header = TRUE, sep = ','
 )
+
 
 ?read.table  # see the details about read.table()
 
@@ -204,8 +205,10 @@ str(df)  # Gives the structure of an object.
 c(3, 2, 1) / 2
 c(1,2,3,4,5) * 2
 c(1,2,3,4,5) + 1  # the operations are performed in a vectorized manner
+
 c(1,2,3,4,5) + c(1,2,3,4,5)  # with the same element numbers
-c(1,2,3,4) + c(1,2) # it is valid, but dangerous; vectors with different length
+
+c(1,2,3,4) + c(1, 2) # it is valid, but dangerous; vectors with different length
 
 
 abs(-0.1253)  # Absolute value
@@ -250,7 +253,7 @@ paste('hjjx', ';', '125', 1425, sep = "-")
 # data frame functions ----
 
 head(df, 6)  # the first several (6) rows of df
-tail(df, 6)  # the last several (6) rows of df
+tail(df, 10)  # the last several (6) rows of df
 View(df)     # view the df in the table form
 colnames(df) # column names 
 dim(df)      # dimensions 
@@ -265,8 +268,8 @@ str(df)      # check the structure of the df
 #     data/Example_data.csv, use read.table() function;
 #     hint: take care of the parameters. first row as column name and the columns are separated by comma ","
 df <- read.table(
-  # 
-  # fill the parameters here
+  file = "D:/FloodRiskSeminar/data/Example_data.csv",
+  header = T, sep = ","
 )
 
 
@@ -274,30 +277,38 @@ df <- read.table(
 # Check the dimensions (or shape) of the imported data
 #   number of rows and columns
 
+dim(df)
 
-
+length(df$month)
 
 # exercise 3. ------
 # How many years this data set covers? Starting year? End year?
 
+df$year[1]
 
-
+tail(df$year, 1)
 
 
 
 # exercise 4. ------
 # Derive the maximum, minimum, mean value, standard deviation of the discharge column
 
+df$discharge
 
-
+max(df$discharge)
+min()
+mean()
 
 # exercise 5. ------
 # Derive the maximum, minimum, mean value, standard deviation 
 #     of the first 365 elements in discharge column
 #hint: here we would have to extract the first 365 elements (first year) in discharge column
 
-
-
+ts = head(df$discharge, 365)
+max(ts)
+min()
+mean()
+sd()
 
 # exercise 6. ------
 # Export the first 365 rows of df into text file
@@ -307,6 +318,10 @@ df <- read.table(
 #     give the output file name as "output"
 #     don't forget the file extension: .csv or .txt
 
-
+write.table(
+  head(df, 365),
+  file = "D:/output.csv",
+  col.names = TRUE, row.names = FALSE, sep = ";"
+)
 
 

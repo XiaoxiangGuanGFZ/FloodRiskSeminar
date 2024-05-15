@@ -16,8 +16,8 @@ This repository contains the materials prepared for the flood risk seminar given
 
 ## Timetable
 - 10.05.2023: R basics (online via Zoom)
-- 17.06.2023: R basics and frequency analysis
-- 24.06.2023: Flood risk analysis
+- 17.06.2023: R basics 
+- 24.06.2023: R basics and GFZ frequency analysis
 - 12.07.2023: Time-varying flood risk exercise
 - 19.07.2023: Time-varying flood risk exercise
 

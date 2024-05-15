@@ -3,7 +3,7 @@
 # R project language concepts and fundamentals
 # 
 # Created: 22.05.2022
-# Last updated: 09.05.2024
+# Last updated: 14
 # Xiaoxiang Guan (guan.xiaoxiang@gfz-potsdam.de)
 # ---
 
@@ -24,29 +24,32 @@ help(package="extRemes")
 
 # getting help in R --------
 
-help("iris") #Help on function foo (quotation marks optional)
-?iris  # iris is a dataset that comes with R project
-# Lists all available example datasets contained in currently loaded packages
-View(iris)
+help(max)  # with a function name
+?max
 
 
 ### ------ Data types and structures in R ------
 ## ---- Data types ----
-x = 10.1
-x
 
-x <- 10.1
-x
+x <- 10.1 # numeric: floating point number
+x <- 0  # numeric: integer
 
-10.1 -> x
-x
-  
+x1 <- "name" # character
+x2 <- TRUE   # logical / boolean
+
+# rules for variable names: 
+# 1. A variable name must start with a letter and can be a combination of letters, digits, period(.)
+#    and underscore(_). If it starts with period(.), it cannot be followed by a digit.
+# 2. A variable name cannot start with a number or underscore (_)
+# 3. Variable names are case-sensitive (age, Age and AGE are three different variables)
+# 4. Reserved words cannot be used as variable names (like TRUE, FALSE, NULL, if...)
+
+
 is.numeric(x)
 is.integer(x)  # is it a integer number?
 is.character(x)
 is.logical(x)
 
-# test: x = 10
 
 # type conversion
 as.character(10)
@@ -57,8 +60,8 @@ as.logical(5)      # TRUE: as long as it is a non-zero numerical value
 
 # convert boolean to integer 
 
-as.numeric(TRUE)
-as.numeric(FALSE)
+as.numeric(TRUE)  # 1
+as.numeric(FALSE) # 0
 
 1 + TRUE
 
@@ -69,35 +72,24 @@ as.numeric(FALSE)
 ## ----- Data structures in R --------
 
 # Vector ------
-x <- 0.2  # a scalar is one-element vector
-x <- TRUE
-x <- "pass"
 
-a <- c(1, 2, 5, 3, 6, -2, 4)  # <- assignment sign; numeric 
-a
-b <- c(TRUE, FALSE, TRUE)
-c <- c("Name1", "Name2")
+v1 <- c(1, 2, 5, 3, 6, -2, 4)  # numeric vector, with 7 elements
 
-d <- 1:5  # a numeric sequence from 1 to 5 with a step of 1
-d <- seq(1, 10, by = 2)
+v2 <- c(TRUE, FALSE, TRUE)     # logical vector, with 3 elements
+v3 <- c("Name1", "Name2")      # character vector, with 2 elements
+
+v4 <- 1:5  # a numeric sequence from 1 to 5 with a step of 1
+v4 <- seq(1, 10, by = 2)
 
 # element indexing: access specific elements in the vector
-a[1]  # access the first element in vector a
-a[1:3]  # access the first 3 elements in a
-a[c(1, 3, 5, 7)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
+v1[1]  # access the first element in vector a
+v1[1:3]  # access the first 3 elements in a
+v1[c(1, 3, 5, 7)]  # access multiple elements in the vector with position vector c(1, 3, 5, 7)
 
-b <- c("one", "two", "three") # character
-b
-b[c(1, 3)]
 
-c <- c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE) # Boolean or logical
-c
+v5 <- 1:20
+v5 <- seq(from = 1, to = 20, by = 2) # sequence
 
-d <- 1:20
-d
-
-e <- seq(from = 1, to = 20, by = 2) # sequence
-e
 
 # Matrices ------
 # A matrix is a two-dimensional array 
@@ -121,13 +113,7 @@ z
 # A data frame is more general than a matrix in 
 # that different columns (vectors) can contain different modes of data
 
-df <- data.frame(
-  'column1' = c(1, 2, 3),
-  'column2' = c('a', 'b', 'c'),
-  'column3' = c(TRUE, FALSE, TRUE)
-)  # create a data.frame from scratch
-
-# create data.frame from a couple of vectors
+# create data.frame from a couple of vectors, with the same length
 patientID <- c(1, 2, 3, 4)
 age <- c(25, 34, 28, 52)
 diabetes <- c("Type1", "Type2", "Type1", "Type1")
@@ -139,34 +125,7 @@ patientdata
 patientdata$age   # access specific column with $ sign
 patientdata$diabetes
 
-# access data (elements) with [] operator
-patientdata[, 1]  # first column
-patientdata[1, ]  # first row
-patientdata[1, 1] # element located at 
 
-# some features about df
-dim(patientdata)  # dimensions 
-dim(df)
-
-colnames(patientdata)  # column names
-colnames(df)
-
-row.names(patientdata)  # row names
-row.names(df)
-
-iris  # the built-in data set from R project
-colnames(iris)
-dim(iris)
-
-# list --------
-# a list is an ordered collection of objects (components)
-list_example <- list(
-  # here the list has 4 components
-  'l1' = 1.25,
-  'l2' = c(1,2,3,4,5),
-  'l3' = data.frame('c1' = c(1,3,5), 'c2' = c(2,4,6)),
-  'l4' = list(0)
-)
 
 #### ---- getting data into R ----------
 # data input and output
@@ -182,14 +141,6 @@ df <- read.table(
 )
 
 ?read.table
-# the parameters in read.table
-head(df, 6)
-tail(df, 6)
-
-# export / save a data frame into a text file
-write.table(
-  df, 
-  file = 'D:/test.csv')
 
 write.table(
   df, 
@@ -203,7 +154,7 @@ write.table(
 )
 
 
-#### ------ Function and loops --------
+#### ------ Functions --------
 
 # basic functions ----
 length(c(1,2,3,4))  # Gives the number of elements/components.
@@ -211,42 +162,41 @@ length(c(1,2,3,4))  # Gives the number of elements/components.
 dim(df)  # Gives the dimensions of an object.
 str(df)  # Gives the structure of an object.
 
-# mathematical ----
+# mathematical (operations / functions)----
 1 + 1
-c(1,2,3,4,5) + 1  # the operations are performed in a vectorized manner
-c(1,2,3,4,5) + c(1,2,3,4,5)  # with the same element numbers
-
-c(1,2,3,4) + c(1,2) # it is valid, but dangerous; vectors with different length
-
-3 - 2 
-1 * 9 
-c(1,2,3,4,5) * 2
-9 / 3 
-9 / c(3, 2, 1)
-2 ^ 3  # Exponentiation
-
-2 ^ c(1,2,3,4)
+3 - 2
+1 * 9
+9 / 3
+2 ^ 3         # Exponentiation
 
 abs(-0.1253)  # Absolute value
-sqrt(4) # square root 
-
+sqrt(4)       # square root
 x = 12.23134
-n = 2
-round(x, digits=n) # Rounds x to the specified number (n) of decimal places
+cos(x)
+sin(x)
+tan(x)        # Trigonometric functions: cosine, sine, and tangent
 
-cos(x); sin(x); tan(x)  # Trigonometric functions: cosine, sine, and tangent
+log(x)        # the natural logarithm
+exp(x)        # Exponential function
 
-log(x)  # the natural logarithm
-exp(x)  # Exponential function
+
+c(1, 2, 3, 4, 5) + 1  # the operations are performed in a vectorized manner
+c(1, 2, 3, 4, 5) * 2
+c(1, 2, 3, 4, 5) / 2
+sqrt(c(1, 2, 3, 4, 5))
+
+c(1, 2, 3, 4, 5) + c(5, 4, 3, 2, 1)  # with the same element numbers
+c(1, 2, 3, 4, 5) * c(5, 4, 3, 2, 1)
+
 
 # statistical ----
 x <- c(0.1, 1, 1.2, 0.25, 0.56, 5)
-mean(x) # Mean
-median(x) # Median
-sd(x) # Standard deviation
-var(x) # Variance
+mean(x)    # Mean
+median(x)  # Median
+sd(x)      # Standard deviation
+var(x)     # Variance
 
-range(x) # Range, min-max
+range(x)   # Range, min-max
 sum(x)
 max(x)
 min(x)
@@ -254,74 +204,110 @@ min(x)
 sort(x, decreasing = F)
 sort(x, decreasing = T)
 
-# character functions ----
-x <- "xjhadnc_102"
-nchar(x) # Counts the number of characters of x.
-substr(x, start, stop) # Extracts or replaces substrings in a character vector.
-substr(x, 1, 4)  # the first 4 letters
+# functions for objects 
 
-strsplit(x, split) # Splits the elements of character vector x at split.
-strsplit('sd_sd1_214', '_')
+length(x)  # length of vector object
+str(x)     # structure of the object
 
-paste('...', 'hxgb', '125', 1425, sep="")  # string concatenation
+head(df, 6)   # first 6 rows in the dataframe df
+tail(df, 7)   # last 7 rows in the dataframe df
+dim(df)       # dimensions of the data frame
+str(df)       # structure of the dataframe
+colnames(df)  # column names of data frame
+rownames(df)  # row names of data frame
+summary(df)   # a brief summary of a numeric data frame
+
 
 # Customized functions ----
-myFunc <- function(parameters) {
-  # calculation formula or processes
-  # command chunk
+myFunc <- function(parameter_list) {
+  # the operations in this function are performed on or based on
+  #    the parameters provided.
+  
+  # command chunk here
   out = ...
   
-  return(out)
+  # return an object to the environment where this function is called
+  # the out object can be of any type of data structure: vector, data frame, ...
+  return(out) 
 }
 
-myfunc <- function(x1,x2) {
+myfunc <- function(x1, x2) {
   # give two numeric values x1, x2
   y = (x1 + x2) * (x1 - x2)
   return(y)
 }
 
-myfunc(1.0, 2.0)
+myfunc(1.0, 2.0)  # call the defined function 
 
 
 # --- control structure ----
-# Logical operators
-1 < 3
-1.2 <= 2.0
 
-2 > 3
-1.25 >= 2
+## if-else structure ----
+if (condition1) {
+  # condition1 == TRUE, then
+  
+  # command chunk 1 here
+  
+} else if (condition2) {
+  # condition2 == TRUE, then
+  
+  # command chunk 2 here
+  
+} else {
+  # command chunk 3 here
+  
+}
 
-x = 1.2  # assignment operator
+# if-else example
+condition = TRUE
+if (condition) 
+{
+  print(1)
+} else {
+  print(0)
+}
 
-1.1 == 1  # comparison (equality) operator
-1.1 != 1
+## Comparison operators ---- 
+# operations with logical results
+1 < 3      # less than
+1.2 <= 2.0 # less than or equal to
+
+2 > 3      # greater than 
+1.25 >= 2  # greater than or equal to
+
+x = 1
+x == 1  # equal
+x != 1  # not equal 
+
 
 c(1, 2, 1, 3, 2.5) > 1.5 # perform vectorized comparison 
 
-1 %in% c(1,2,3,1.2)  # is 1 included in the vector right to the %in% operator?
-'xs' %in% c('XS', 'X')
-
-x1 <- 1.5  # <- assignment operator 
+## logical operator ---- 
+x1 <- 1.5  
 x2 <- 2.5
-x3 <- 1.6
-x4 <- 0.6
+y1 <- 1.6
+y2 <- 0.6
 
 #  Logical Operators
 # chain multiple test expressions
-x1 > x2 & x3 < x4   # &: and
-x1 <= x2 & x3 <= x4 # &: and
-x1 > x2 | x3 <= x4  # |: or 
-x1 <= x2 | x3 <= x4 # |: or
+x1 > x2 & y1 < y2   # &: and
+x1 <= x2 & y1 <= y2 # &: and
+x1 > x2 | y1 <= y2  # |: or 
+x1 <= x2 | y1 <= y2 # |: or
 
 x1 <= x2
-!(x1 <= x2)  # !: exclamation mark: not 
+!(x1 <= x2)         # !: exclamation mark: not 
 
-# ---- if-else structure ----
-if (x1 >= x2 & x3 < x4) {
-  y = x1 - x2
+# if-else example ----
+x = -3
+if (x > 0) {
+  x = x
+} else if (x < 0) {
+  x = -x
 } else {
-  y = x2 - x1
+  x = 0
 }
+
 
 
 # ---- loops -------
@@ -340,15 +326,11 @@ while (id <= 5) {
 
 #### ---- Data manipulation -----
 
-# variable creation, adding, altering ----
-# data creating 
+
+# data creating ------
 x <- NULL
 x <- 0
 x <- c(1,2,3,4,5,6)  # numeric vectors
-# altering
-x[1]
-x[2] <- 0
-x[5] <- 11
 
 # creating logical vectors
 x <- c(TRUE, FALSE, FALSE)  # direct creation 
@@ -382,9 +364,26 @@ df
 
 colnames(df)  # access the column names
 colnames(df) <- c("c1", "c2", "c3", "c4")  # rename the columns
-colnames(df) <- c("patientID", "age", "diabetes", "status")  # rename the columns
+colnames(df) <- c("ID", "age", "diabetes", "status")  # rename the columns
 
-# filtering and sub-setting ----
+# data altering ------
+x[1]
+x[2] <- 0
+x[5] <- 11
+
+# data adding ------
+# for vector objects
+x <- c(1, 2, 3)
+x[4] <- 4
+
+x[10] <- 10
+
+x1 <- c(2, 4, 6)
+
+x <- c(x, x1)
+
+
+# filtering and sub-setting ------
 
 x1 <- c(1.0, 0, -2.2, 2.5, -5.1, 6, 4.15, -1.5, 3.2)
 
@@ -436,8 +435,8 @@ df$age   # then all select methods for vectors are also valid
 
 df$age[1]  # just address df$age as a general vector
 df$age[2:3]
-df$age[df$age > 18]  # all rainy days
-df$age[df$age > 18 & df$age < 50]  # all rainy days in 2000
+df$age[df$age > 18]
+df$age[df$age > 18 & df$age < 50]
 
 df$age[df$status != "Poor"]  # filter one column based on another column
 
@@ -445,7 +444,8 @@ length(df$age[df$status == "Poor"])
 max(df$age[df$status == "Poor"])
 mean(df$age[df$status == "Poor"])
 
-# merging data ----
+
+# data frame merging ------
 df1 <- data.frame(
   'c1' = 1:3,
   'c2' = c('a', 'b', 'c')
@@ -455,11 +455,23 @@ df2 <- data.frame(
   'c2' = c('d', 'e', 'f')
 )
 
-cbind(df1, df2)  # bind by column
-rbind(df1, df2)  # bind by row
+cbind(df1, df2)  # bind by column, two data frames should have the same number of rows
+rbind(df1, df2)  # bind by row, two data frames should have the same number of columns
 
 cbind(df1, c(4,5,6)) # bind a data frame with a vector (with the same dimension)
 rbind(df1, c(4,'d')) 
+
+df2 = data.frame(
+  ID = c(2,3,5), 
+  gender = c("M", "F", "F")
+)
+
+merge(
+  df, df2,
+  by.x = "ID", by.y = "ID", all.x = TRUE
+)
+
+# data frame group and aggregation ------
 
 
 ### ------- Exercise with R - R basics -----------
@@ -474,20 +486,20 @@ df <- read.table(
 
 
 # exercise 2. ------
-# Check the dimensions of the imported data
+# How many days are there with discharge exceeding (>=) 8000? 
+
 
 
 
 
 # exercise 3. ------
-# How many years this data set covers? Starting year? End year?
+# Which month has the most discharge days exceeding 8000? 
 
 
 
 
 # exercise 4. ------
-# Is there any missing data? (-99.9 indicates the missing value). 
-#     If there is, how many missing values?
+# Derive the annual maximum discharge series 
 
 
 
@@ -498,14 +510,8 @@ df <- read.table(
 
 
 # exercise 6. ------
-# Estimate the mean value, standard deviation of annual maximum discharge series
+# Figure out in which day (date) the discharge reaches the maxima for each year 
 
-
-
-
-# exercise 7. ------
-# Export the annual maximum discharge series into text file (.csv or .txt format) 
-#     with write.table() function
 
 
 
