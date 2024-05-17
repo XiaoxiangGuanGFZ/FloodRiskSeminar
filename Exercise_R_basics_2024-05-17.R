@@ -272,14 +272,6 @@ if (x > 0) {
   x = 0
 }
 
-x <- c(-3, 1, 2)
-if (x > 0) {  ## not valid here. 
-  x = x
-} else if (x < 0) {
-  x = -x
-} else {
-  x = 0
-}
 
 # ---- loops -------
 Ids <- c(1, 2, 3, 4, 5)
