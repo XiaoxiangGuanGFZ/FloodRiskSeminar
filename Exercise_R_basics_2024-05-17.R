@@ -357,6 +357,11 @@ x1 <- c(2, 4, 6)
 
 x <- c(x, x1)  # combine with vectors 
 
+x <- NULL  # null vector, it is empty after declaration 
+x[1] <- 1  # fill values
+x[5] <- 5
+x
+
 # data sorting -----
 x <- c(1.0, 0, -2.2, 2.5, -5.1, 6, 4.15, -1.5, 3.2)
 sort(x)           # sort the numeric vector in increasing order
