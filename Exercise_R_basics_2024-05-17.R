@@ -362,6 +362,9 @@ x <- c(1.0, 0, -2.2, 2.5, -5.1, 6, 4.15, -1.5, 3.2)
 sort(x)           # sort the numeric vector in increasing order
 sort(x, decreasing = T)
 
+df[order(df$age), ]
+df[order(df$age, decreasing = TRUE), ]
+
 # filtering and sub-setting ------
 
 x1 <- c(1.0, 0, -2.2, 2.5, -5.1, 6, 4.15, -1.5, 3.2)
