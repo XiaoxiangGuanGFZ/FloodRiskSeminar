@@ -403,7 +403,7 @@ df[1:2, 1]
 df[1, 2:3]
 
 df[1:2, 2:3]
-df[2:4, c('patientID', 'age')]
+df[2:4, c('ID', 'age')]
 
 # select column(s) by name(s)
 
