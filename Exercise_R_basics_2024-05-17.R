@@ -288,6 +288,8 @@ while (id <= 5) {
   id = id + 1
 }
 
+id <- 1
+
 while (id <= 5) {
   out = id * (-1)
   print(out)
@@ -412,7 +414,11 @@ df$age   # then all select methods for vectors are also valid
 df$age[1]  # just address df$age as a general vector
 df$age[2:3]
 df$age[df$age > 18]
+
 df$age[df$age > 18 & df$age < 50]
+
+y = df$age
+y[y > 18 & y < 50]
 
 df$age[df$status != "Poor"]  # filter one column based on another column
 
@@ -469,34 +475,75 @@ aggregate(age~status, df, FUN = mean)
 df <- read.table(
   # 
   # fill the parameters here
+  "D:/FloodRiskSeminar/data/Example_data.csv",
+  header = T, sep = ","
 )
 
 
 # exercise 2. ------
 # How many days are there with discharge exceeding (>=) 8000? 
 
+# solution 1: 
+sum(df$discharge >= 8000)  # TRUE: 1; FALSE: 0
 
+# solution 2:
+df_subset <- df[df$discharge >= 8000, ] # filter the data frame based on discharge column 
+dim(df_subset)   # result the dimension of the data frame, number of rows and cols
 
+# solution 3:
+
+discharge <- df$discharge  # access the discharge column
+
+number = 0    # define a variable to count
+for (dis in discharge) {  # iterate over the elements in discharge vector
+  if (dis >= 8000) {
+    number = number + 1 # increment number as long as one discharge value exceeding 8000
+  }
+}
+number
 
 
 # exercise 3. ------
 # Which month has the most discharge days exceeding 8000? 
 
+# solution 1: 
+exceed8000 <- function(x) {
+  # define a function here, 
+  # x: the only parameter: a numeric vector
+  # this function is designed to count the number of values exceeding 8000
+  number = sum(x >= 8000)
+  return(number)  # return the count
+}
 
+# data aggregation: group the data frame based on month variable, and then apply the function exceed8000
+# to discharge column for each group and return a data frame
+df_out <- aggregate(discharge ~ month, df, FUN = exceed8000)
+df_out[order(df_out$discharge, decreasing = T),] # sort the data frame
 
+# solution 2:
+# use for loops
+
+numbers <- NULL  # define a null vector, used to store the counts for 12 months
+for (i in 1:12) { # iterate over each month (in total 12 months)
+  df_subset <- df[df$month == i, ] # filter the data frame, with month only equal to month i
+  numbers[i] <- sum(df_subset$discharge >= 8000) # adding value to the null vector;
+}
+
+# create a data frame from month vector and numbers vector
+out <- data.frame(
+  month = 1:12,
+  numbers
+)
+out[order(out$numbers, decreasing = T), ]  # sort the data frame based on numbers column
 
 # exercise 4. ------
 # Derive the annual maximum discharge series 
 
+aggregate(discharge~year, df, FUN = max)  # aggregation, group variable: year; operating variable: discharge
+
 
 
 # exercise 5. ------
-# Derive the annual maximum discharge series 
-
-
-
-
-# exercise 6. ------
 # Figure out in which day (date) the discharge reaches the maxima for each year 
 
 
