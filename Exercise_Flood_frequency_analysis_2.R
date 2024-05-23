@@ -7,125 +7,6 @@
 # Xiaoxiang Guan (guan.xiaoxiang@gfz-potsdam.de)
 
 
-### ---- control structure 
-# ---- if-else structure ----
-x1 = -1.25
-
-if (x1 >= 0 ) { #if it is non-negative, print it
-  print( x1 )
-} else {
-  print( -x1 )  # if it is negative, print its opposite
-}
-
-
-# ---- for-loop ----
-for (i in 1:5) { 
-  print(i) 
-} 
-
-# -- while-loop -----
-i <- 0 
-while (i <= 4) 
-{ 
-  i <- i + 1 
-  print(i) 
-} 
-
-
-#------ data.frame manipulation -------
-# read data into data.frame
-df <- read.table(
-  file = "D:/FloodRiskSeminar/data/EXAMPLE_Area4766_1982-2002.csv",
-  header = TRUE, sep = ','
-)
-
-### ---- description (basic info) of data.frame -----
-head(df, 6)
-View(df)
-colnames(df)
-dim(df)
-
-### ----- access and describe the columns (vectors) -----
-df$y  
-df$rainfall
-
-unique(df$y)
-
-range(df$y)
-
-### ----- apply functions ----
-
-# each column in the data.frame is a vector, we can apply any functions 
-#   that work with vectors to specific column of data.frame.
-mean(df$rainfall)
-sd(df$rainfall)
-
-
-df$rainfall[1]  # access elements like vector with [] operator
-df$discharge[1:100]  # access a sequence of elements
-
-### ---- sorting the data ----
-
-sort(df$rainfall)  # sort specific column like vectors
-df[order(df$rainfall), ]  # sort the entire data.frame based on one column "rainfall"
-
-### ------------- filtering the column in data.frame ----------
-# columns are manipulated as vectors
-df$rainfall[df$rainfall > 0]
-df$rainfall[df$rainfall > mean(df$rainfall)]
-df$rainfall[df$rainfall > median(df$rainfall)]
-
-### ---- filtering (sub-setting) a data frame by column-based conditions -----
-# ---- filtering based on one column----
-df[df$rainfall > 0, ]
-df[df$rainfall > mean(df$rainfall), ]
-
-# ---- multiple test expressions ----
-#    combine by logical operator
-df[df$rainfall > 0 & df$y == 1999, ]
-df[df$rainfall > 0 & df$rainfall < 1, ]
-
-# ---- filtering based on multiple columns ----
-df[df$rainfall > 30 & df$discharge > mean(df$discharge), ]
-df[df$rainfall > 30 & df$discharge > mean(df$discharge) & df$y == 2000, ]
-
-### ---- creating new columns ----
-df$new_column <- seq(1, dim(df)[1])  # just like vector assignment
-df$ratio_P_Ep <- df$rainfall / df$evaporation  # from existing columns arithmetic
-df$ratio_P_Q <- df$rainfall / df$discharge
-
-### ---- remove columns from the data.frame ----
-df <- df[, -2]  # remove the 2nd column from df
-
--c(1,2,3)
-
-### ---- aggregating data -----
-# Splits the data into subsets, 
-#   computes summary statistics for each, 
-#   and returns the result in a convenient form.
-
-aggregate(rainfall ~ y, data = df, FUN = sum)  # aggregate function: sum
-aggregate(rainfall ~ y + m, data = df, FUN = sum)  # aggregate function: sum
-aggregate(discharge ~ y, data = df, FUN = mean) # aggregate function: mean
-aggregate(discharge ~ y, data = df, FUN = max)  # aggregate function: max
-
-
-rainydays <- function(x) {
-  # define a function: 
-  # given a vector x, return the number of elements in x greater than 0
-  # Parameter:
-  # x: a numeric vector
-  
-  x = x[x > 0]  # sub-set the x vector, select the elements in x greater than 0
-  n = length(x)  # estimate the length (size) of vector x, how many elements in vector x.
-  
-  return(n)  # return the output
-}
-
-aggregate(rainfall ~ y, data = df, FUN = rainydays)
-aggregate(rainfall ~ m + y, data = df, FUN = rainydays)
-
-
 ####################### flood frequency analysis ####################
 setwd('D:/FloodRiskSeminar/data/')  # set the work space
 
@@ -215,4 +96,106 @@ AMS <- aggregate(discharge~year, data = df, FUN = max)
 #   mean annual expected economic loss 
 #   no greater than 1.5 million $ for the following 100 years.
 
+
+
+# ----------------- Exercise ------------------
+# (1) In case, the flood defense water level is 3.8 m, 
+#    then a flood happens, with the discharge of 11000 m3/s, 
+#    what is the expected economic loss?
+
+Flood_WaterLevel = 0.478 * 11000 ^(0.23)
+Flood_WaterLevel
+
+E_loss = 0
+if (Flood_WaterLevel <= 3.8) {
+  print("no flooding")
+  E_loss = 0
+} else {
+  WaterLevel_exceed = Flood_WaterLevel - 3.8
+  if (WaterLevel_exceed <= 0.15) {
+    E_loss = 0
+  } else if (WaterLevel_exceed <= 1) {
+    E_loss = (WaterLevel_exceed - 0.15) * 8
+  } else {
+    E_loss = 6.8
+  }
+}
+
+
+# (2) In case, the flood defense water level is 3.8 m, 
+#   generate 100 years of GEV-distributed annual maximum discharge series, 
+#   calculate the mean annual expected economic loss. 
+WaterLevel_defense = 3.8
+
+WL <- function(Q) {
+  ## define a function to estimate the water level from discharge
+  # one parameter: Q discharge
+  waterlevel = 0.478 * Q ^ (0.23)
+  
+  return(waterlevel)
+}
+
+WL(12000)
+WL(22000)
+WL(19000)
+
+EconomicLoss <- function(WL_exceed){
+  ## define a function to estimate the economic loss from exceeding water level
+  ## unit: million $
+  if (WL_exceed <= 0.15) {
+    loss = 0
+  } else if (WL_exceed <= 1) {
+    loss = (WL_exceed - 0.15) * 8
+  } else {
+    loss = 6.8
+  }
+  return(loss)
+}
+
+EconomicLoss(-0.2)
+EconomicLoss(0.1)
+EconomicLoss(0.48)
+EconomicLoss(1.5)
+
+AMS_run <- revd(100, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
+loss_100 <- NULL  # define a null vector to store the 100 estimated losses
+WL_defense <- 3.8
+for (i in 1:100) {   # a for-loop, 
+  
+  flood_discharge = AMS_run[i]  # iterate each element in AMS_run
+  
+  # estimate the water level from discharge
+  flood_wl = WL(flood_discharge) 
+  
+  # estimate the economic loss from exceeding water level
+  loss_100[i] = EconomicLoss(flood_wl - WL_defense) 
+}
+
+mean(loss_100)
+
+
+# (3) Design the H_defense which could maintain the 
+#   mean annual expected economic loss 
+#   no greater than 1.5 million $ for the following 100 years.
+
+AMS_run <- revd(100, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
+loss_100 <- NULL  
+
+## change the defense water level for several times and 
+## see the response from mean annual economic loss
+WL_defense <- 3.33
+
+
+for (i in 1:100) {   # a for-loop, 
+  
+  flood_discharge = AMS_run[i]  
+  
+  flood_wl = WL(flood_discharge) 
+  
+  loss_100[i] = EconomicLoss(flood_wl - WL_defense) 
+}
+
+mean(loss_100)
 

@@ -546,8 +546,63 @@ aggregate(discharge~year, df, FUN = max)  # aggregation, group variable: year; o
 # exercise 5. ------
 # Figure out in which day (date) the discharge reaches the maxima for each year 
 
+# solution 1
+range(df$year)
+years <- seq(
+  min(df$year),
+  max(df$year),
+  1
+)
+
+years <- seq(
+  head(df$year, 1),
+  tail(df$year, 1),
+  1
+)
+
+years <- unique(df$year)
 
 
+out <- data.frame(
+  year = NULL,
+  month = NULL,
+  day = NULL,
+  discharge = NULL
+)
+
+# split the data frame into subset dfs based on year column
+# and the sort the subset df based on discharge column in decreasing order, 
+# then retrieve the first row in the sorted subset df
+
+for (i in 1:length(years)) {
+  df_temp <- df[df$year == years[i], ]  # subset data frame for one specific year
+  df_temp <- df_temp[order(df_temp$discharge, decreasing = T), ] # sorting the data frame based on discharge
+  out <- rbind(out, head(df_temp, 1))   # get the first row of the sorted data frame 
+}
 
 
+# solution 2
+
+df_max <- aggregate(discharge~year, df, FUN = which.max)
+df_max$first_day <- as.Date(paste0(df_max$year, "-01-01"))
+df_max$date_max <- df_max$first_day + df_max$discharge - 1
+
+
+x <- c(5, 1, 3, 2, 1)
+which.max(x)
+
+x <- c(12, 9.0, 11, 20)
+which.max(x)
+
+
+as.Date("2024-05-24")  # convert character to date type
+as.Date("2024-05-24") - 1  # get the date of yesterday 
+as.Date("2024-05-24") + 5  # get the date 5 days after today
+
+as.Date("1845-01-01") + 5  
+
+as.Date("2024-05-24") - as.Date("2024-01-01")
+
+# know more about date in R:
+# https://bookdown.org/rdpeng/rprogdatascience/dates-and-times.html
 
