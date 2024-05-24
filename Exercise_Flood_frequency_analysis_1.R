@@ -217,7 +217,6 @@ devd(6000, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
 
 
 
-
 # 7. Split the AMS series into two parts: a) 1845-1925 and b)1926-2004: 
 #   estimate the GEV parameters for this two periods respectively
 #   estimate the 100-year discharges for these two different historical periods, compare them  
