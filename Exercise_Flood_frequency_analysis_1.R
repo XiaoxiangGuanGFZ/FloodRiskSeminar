@@ -216,27 +216,6 @@ devd(6000, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
 #    using plot() and points()
 
 
-AMS$m_rank = rank(AMS$discharge) # rank of the values
-AMS$P = round(ams$m_rank / (1 + dim(AMS)[1]), 4) # empirical probability
-AMS$ReturnPeriod_T = round(1 / (1 - AMS$P), 1) # # empirical return period
-AMS
-
-plot(x = AMS$ReturnPeriod_T, y = AMS$discharge)
-
-gene_rp <- seq(1.1, 500, 0.5)
-gene_p <- 1 - 1/ gene_rp
-
-gene_p <- seq(0.00001, 0.99, 0.00001)
-gene_rp <- 1/ (1 - gene_p)
-gene_q <- qevd(gene_p, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
-
-plot(
-  x = AMS$ReturnPeriod_T, y = AMS$discharge,
-  xlab = "return period [year]",
-  ylab = "discharge [m3/s]"
-)
-points(x = gene_rp, y = gene_q, col = "red", type = "l")
-
 
 
 # 7. Split the AMS series into two parts: a) 1845-1925 and b)1926-2004: 
