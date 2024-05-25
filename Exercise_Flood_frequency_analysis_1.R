@@ -60,6 +60,7 @@ range_y <- range(iris$Sepal.Width)
 
 df1 <- iris[iris$Species == "virginica", ]
 df2 <- iris[iris$Species == "versicolor", ]
+df3 <- iris[iris$Species == "setosa", ]
 
 plot(
   df1$Sepal.Length,
@@ -86,11 +87,21 @@ points(
   ylab = "Sepal width",
 )
 
+points(
+  df3$Sepal.Length,
+  df3$Sepal.Width,
+  type = "p",
+  pch = 1,
+  col = "black",
+  xlab = "Sepal length",
+  ylab = "Sepal width",
+)
+
 legend(
-  x = 4.8, y = 4,  # position to put the legend in the panel
-  legend = c("virginica", "versicolor"),
-  pch = c(1, 1),   ## Plot character or pch
-  col = c("blue", "red")
+  x = 6.5, y = 4.2,  # position to put the legend in the panel
+  legend = c("virginica", "versicolor", "setosa"),
+  pch = c(1, 1, 1),   ## Plot character or pch
+  col = c("blue", "red", "black")
 )
 
 
@@ -183,8 +194,11 @@ paras <- `names<-`(paras, NULL)  # rename the vector
 
 
 revd(100, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
 pevd(8000, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
 qevd(0.5, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
 devd(6000, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
 
 
@@ -192,28 +206,75 @@ devd(6000, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
 # 
 # 1. get data into R: ./data/Example_data.csv, use read.table() function
 
+df <- read.table(
+  # fill the parameters
+  "D:/FloodRiskSeminar/data/Example_data.csv",
+  header = T, sep = ','
+)
 
 
 # 2. Derive the annual maximum discharge (AMS) series: aggregate() 
 
 
+# extract annual maximum discharge with aggregate()
+AMS = aggregate(discharge ~ year, data = df, FUN = max)
+
 
 # 3. Estimate the GEV parameters for AMS: fevd()
 
 
+# GEV fitting --------
+
+# fit the GEV by using fevd() function in `extRemes` package
+GEV_mle = fevd(AMS$discharge, # extreme variable
+               method = "MLE", # parameter estimation method
+               type = "GEV"  # probability distribution type
+)
+
+paras = GEV_mle$results$par
 
 # 4. Derive the 100-year discharge
 
+return_period <- 100
+probability <- 1 - 1 / rp  ## CDF
 
+qevd(probability, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
 
 
 # 5. What is the return period of the discharge 10000 m3/s?
 
 
+probability = pevd(10000, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
+probability
+1 / ( 1- probability)   # return period
+
 
 
 # 6. Plot the empirical frequency curve and estimated GEV curve together: 
 #    using plot() and points()
+
+AMS$m_rank = rank(AMS$discharge) # rank of the values
+AMS$P = round(ams$m_rank / (1 + dim(AMS)[1]), 4) # empirical probability
+AMS$ReturnPeriod_T = round(1 / (1 - AMS$P), 1) # # empirical return period
+AMS
+
+plot(x = AMS$ReturnPeriod_T, y = AMS$discharge)
+
+gene_rp <- seq(1.1, 500, 0.5)
+gene_p <- 1 - 1/ gene_rp
+
+gene_p <- seq(0.00001, 0.99, 0.00001)
+gene_rp <- 1/ (1 - gene_p)
+gene_q <- qevd(gene_p, loc = paras[1], scale = paras[2], shape = paras[3], type = "GEV")
+
+plot(
+  x = AMS$ReturnPeriod_T, y = AMS$discharge,
+  xlab = "return period [year]",
+  ylab = "discharge [m3/s]"
+)
+points(x = gene_rp, y = gene_q, col = "red", type = "l")
+
 
 
 
